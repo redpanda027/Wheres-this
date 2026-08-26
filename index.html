@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description" content="日本の航空写真を見て、その場所が日本のどこなのかを当てる地理ゲーム。">
+    <meta name="description" content="Guess locations across Japan from satellite imagery.">
     <meta name="theme-color" content="#111827">
 
-    <title>日本どこでしょう？</title>
+    <title>Where's this?</title>
 
     <!--
         このHTMLファイルはゲーム全体の「骨組み」です。
@@ -48,7 +48,7 @@
                     id="menu-button"
                     class="icon-button"
                     type="button"
-                    aria-label="メニューを開く"
+                    aria-label="Open menu"
                     aria-expanded="false">
                     <span></span>
                     <span></span>
@@ -59,9 +59,9 @@
                     id="logo"
                     class="logo"
                     href="#"
-                    aria-label="Wheres this? ホーム">
+                    aria-label="Where's this? Home">
                     <span class="logo-main">Where's this?</span>
-                    <span class="logo-sub">日本を見つけよう</span>
+                    <span class="logo-sub">GUESS JAPAN</span>
                 </a>
 
             </div>
@@ -71,12 +71,12 @@
                 <div
                     id="game-progress"
                     class="game-progress"
-                    aria-label="ゲーム進行状況">
+                    aria-label="Game progress">
 
                     <span
                         id="question-number"
                         class="progress-text">
-                        第1問
+                        Question 1
                     </span>
 
                     <span
@@ -94,7 +94,7 @@
                 <div
                     id="header-score"
                     class="header-stat"
-                    aria-label="現在のスコア">
+                    aria-label="Current score">
                     <span class="header-stat-label">SCORE</span>
                     <span id="score-value">0</span>
                 </div>
@@ -102,7 +102,7 @@
                 <div
                     id="header-timer"
                     class="header-stat timer-stat"
-                    aria-label="残り時間">
+                    aria-label="Time remaining">
                     <span class="header-stat-label">TIME</span>
                     <span id="timer-value">60</span>
                 </div>
@@ -122,26 +122,26 @@
 
             <div class="side-menu-header">
 
-                <h2>メニュー</h2>
+                <h2>Menu</h2>
 
                 <button
                     id="close-menu-button"
                     class="icon-button close-button"
                     type="button"
-                    aria-label="メニューを閉じる">
+                    aria-label="Close menu">
                     ×
                 </button>
 
             </div>
 
-            <nav class="side-navigation" aria-label="メインメニュー">
+            <nav class="side-navigation" aria-label="Main menu">
 
                 <button
                     id="menu-home"
                     class="menu-item"
                     type="button">
                     <span class="menu-item-icon">⌂</span>
-                    <span>ゲーム</span>
+                    <span>Game</span>
                 </button>
 
                 <button
@@ -149,7 +149,7 @@
                     class="menu-item"
                     type="button">
                     <span class="menu-item-icon">★</span>
-                    <span>結果</span>
+                    <span>Results</span>
                 </button>
 
                 <button
@@ -157,7 +157,7 @@
                     class="menu-item"
                     type="button">
                     <span class="menu-item-icon">＋</span>
-                    <span>みんなの問題</span>
+                    <span>Community questions</span>
                 </button>
 
                 <button
@@ -165,7 +165,7 @@
                     class="menu-item"
                     type="button">
                     <span class="menu-item-icon">⚙</span>
-                    <span>設定</span>
+                    <span>Settings</span>
                 </button>
 
                 <button
@@ -173,7 +173,7 @@
                     class="menu-item"
                     type="button">
                     <span class="menu-item-icon">?</span>
-                    <span>遊び方</span>
+                    <span>How to play</span>
                 </button>
 
             </nav>
@@ -205,7 +205,7 @@
             <section
                 id="game-screen"
                 class="screen active-screen"
-                aria-label="ゲーム画面">
+                aria-label="Game screen">
 
                 <!-- ================================================
                      上部情報
@@ -223,7 +223,7 @@
                         </p>
 
                         <h1 id="game-title">
-                            この場所は日本のどこ？
+                            Where in Japan is this?
                         </h1>
 
                     </div>
@@ -255,12 +255,12 @@
                     class="game-area">
 
                     <!-- ============================================
-                         左：航空写真
+                         Left: satellite image
                          ============================================ -->
                     <section
                         id="photo-panel"
                         class="game-panel photo-panel"
-                        aria-label="航空写真">
+                        aria-label="Satellite image">
 
                         <div class="panel-header">
 
@@ -270,7 +270,7 @@
                                 </span>
 
                                 <h2>
-                                    この場所を見つけよう
+                                    Find this place
                                 </h2>
                             </div>
 
@@ -278,7 +278,7 @@
                                 id="photo-fullscreen-button"
                                 class="secondary-button"
                                 type="button"
-                                aria-label="航空写真を拡大">
+                                aria-label="Enlarge satellite image">
                                 ⛶
                             </button>
 
@@ -302,11 +302,11 @@
                                 </div>
 
                                 <p class="placeholder-title">
-                                    航空写真を読み込んでいます
+                                    Loading satellite image
                                 </p>
 
                                 <p class="placeholder-description">
-                                    写真が表示されるまでお待ちください。
+                                    Please wait while the image loads.
                                 </p>
 
                             </div>
@@ -315,7 +315,7 @@
                                 id="location-photo"
                                 class="location-photo"
                                 src=""
-                                alt="出題された場所の航空写真"
+                                alt="Satellite image of the mystery location"
                                 hidden>
 
                             <div
@@ -340,11 +340,11 @@
 
                                 <div>
                                     <strong>
-                                        写真を読み込めませんでした
+                                        Could not load the image
                                     </strong>
 
                                     <p>
-                                        画像ファイルを確認してください。
+                                        Please check the image file.
                                     </p>
                                 </div>
 
@@ -376,7 +376,7 @@
                             <div
                                 id="photo-caption"
                                 class="photo-caption">
-                                写真から場所を推測してください。
+                                Guess the location from the image.
                             </div>
 
                             <div
@@ -403,12 +403,12 @@
 
 
                     <!-- ============================================
-                         右：回答地図
+                         Right: answer map
                          ============================================ -->
                     <section
                         id="map-panel"
                         class="game-panel map-panel"
-                        aria-label="回答用地図">
+                        aria-label="Answer map">
 
                         <div class="panel-header">
 
@@ -418,14 +418,14 @@
                                 </span>
 
                                 <h2>
-                                    答えを入力
+                                    Enter your answer
                                 </h2>
                             </div>
 
                             <div
                                 id="map-status"
                                 class="map-status">
-                                入力式
+                                Text entry
                             </div>
 
                         </div>
@@ -437,14 +437,14 @@
                             <div class="answer-entry-mark" aria-hidden="true">?</div>
 
                             <label for="answer-input" class="answer-entry-label">
-                                都道府県と場所を選んでください
+                                Select a prefecture and enter the place.
                             </label>
 
                             <select
                                 id="prefecture-input"
                                 class="prefecture-input"
-                                aria-label="都道府県を選択">
-                                <option value="">都道府県を選択</option>
+                                aria-label="Select prefecture">
+                                <option value="">Select prefecture</option>
                             </select>
 
                             <input
@@ -453,11 +453,11 @@
                                 type="text"
                                 autocomplete="off"
                                 spellcheck="false"
-                                placeholder="場所名を入力（例：東京駅）"
+                                placeholder="Enter a place name (e.g. Tokyo Station)"
                                 aria-describedby="answer-input-help">
 
                             <p id="answer-input-help" class="answer-input-help">
-                                写真から分かる施設名や場所名を入力してください。
+                                Enter the landmark or place name shown in the image.
                             </p>
 
                         </div>
@@ -476,11 +476,11 @@
 
                                 <div>
                                     <strong>
-                                        答えを入力
+                                        Enter your answer
                                     </strong>
 
                                     <p>
-                                        場所の名前を入力して回答してください。
+                                        Enter the name of the place to submit your answer.
                                     </p>
                                 </div>
 
@@ -493,7 +493,7 @@
                                 disabled>
 
                                 <span>
-                                    回答する
+                                    Submit answer
                                 </span>
 
                                 <span class="button-arrow">
@@ -506,7 +506,7 @@
                                 id="skip-answer-button"
                                 class="secondary-button skip-button"
                                 type="button">
-                                スキップ
+                                Skip
                             </button>
 
                         </div>
@@ -538,7 +538,7 @@
                             </span>
 
                             <p id="hint-text">
-                                写真に写っている地形、道路、建物、植生などをよく観察してください。
+                                Look closely at the terrain, roads, buildings, and vegetation.
                             </p>
 
                         </div>
@@ -547,7 +547,7 @@
                             id="hint-button"
                             class="secondary-button"
                             type="button">
-                            ヒント
+                            Hint
                         </button>
 
                     </div>
@@ -557,18 +557,18 @@
                         class="keyboard-help">
 
                         <span>
-                            <kbd>クリック</kbd>
-                            答えを入力
+                            <kbd>Click</kbd>
+                            Enter answer
                         </span>
 
                         <span>
                             <kbd>Enter</kbd>
-                            回答
+                            Submit
                         </span>
 
                         <span>
                             <kbd>H</kbd>
-                            ヒント
+                            Hint
                         </span>
 
                     </div>
@@ -584,7 +584,7 @@
             <section
                 id="result-screen"
                 class="screen"
-                aria-label="結果画面"
+                aria-label="Results screen"
                 hidden>
 
                 <div class="result-container">
@@ -596,11 +596,11 @@
                         </span>
 
                         <h1 id="result-title">
-                            ラウンド結果
+                            Game results
                         </h1>
 
                         <p>
-                            今回の回答結果です。
+                            Here are your results.
                         </p>
 
                     </div>
@@ -631,7 +631,7 @@
                             <div class="result-stat">
 
                                 <span>
-                                    正解数
+                                    Correct answers
                                 </span>
 
                                 <strong id="result-correct">
@@ -643,7 +643,7 @@
                             <div class="result-stat">
 
                                 <span>
-                                    平均距離
+                                    Average distance
                                 </span>
 
                                 <strong id="result-average-distance">
@@ -655,7 +655,7 @@
                             <div class="result-stat">
 
                                 <span>
-                                    最大得点
+                                    Best question score
                                 </span>
 
                                 <strong id="result-best-score">
@@ -667,7 +667,7 @@
                             <div class="result-stat">
 
                                 <span>
-                                    使用時間
+                                    Time used
                                 </span>
 
                                 <strong id="result-time">
@@ -688,7 +688,7 @@
                         <div class="result-list-header">
 
                             <h2>
-                                各問題の結果
+                                Question breakdown
                             </h2>
 
                         </div>
@@ -711,7 +711,7 @@
                             class="primary-button large-button"
                             type="button">
 
-                            もう一度遊ぶ
+                            Play again
                             <span>→</span>
 
                         </button>
@@ -721,7 +721,7 @@
                             class="secondary-button large-button"
                             type="button">
 
-                            ホームへ戻る
+                            Back to home
 
                         </button>
 
@@ -729,7 +729,7 @@
                             id="share-result-button"
                             class="secondary-button large-button"
                             type="button">
-                            <span id="share-result-text">スコアを共有</span>
+                            <span id="share-result-text">Share score</span>
                             <span>↗</span>
                         </button>
 
@@ -746,51 +746,51 @@
             <section
                 id="proposals-screen"
                 class="screen"
-                aria-label="みんなの問題画面"
+                aria-label="Community questions screen"
                 hidden>
 
                 <div class="proposals-container">
                     <div class="proposals-header">
                         <span class="panel-kicker">COMMUNITY QUESTIONS</span>
-                        <h1>みんなの問題</h1>
-                        <p>知っている場所を提案して、次の問題に加えましょう。</p>
+                        <h1>Community questions</h1>
+                        <p>Suggest a place and add it to the game.</p>
                     </div>
 
                     <form id="proposal-form" class="proposal-form">
                         <div class="proposal-form-heading">
-                            <h2>新しい問題を提案</h2>
-                            <span>あなたの端末に保存されます</span>
+                            <h2>Suggest a new question</h2>
+                            <span>Saved on this device</span>
                         </div>
                         <div class="proposal-fields">
                             <label>
-                                場所の名前
-                                <input id="proposal-name" type="text" maxlength="40" placeholder="例：犬山城" required>
+                                Place name
+                                <input id="proposal-name" type="text" maxlength="40" placeholder="e.g. Inuyama Castle" required>
                             </label>
                             <label>
-                                都道府県
+                                Prefecture
                                 <select id="proposal-prefecture" required>
-                                    <option value="">選択してください</option>
+                                    <option value="">Select a prefecture</option>
                                 </select>
                             </label>
                             <label>
-                                正解として受け付ける答え
-                                <input id="proposal-answer" type="text" maxlength="40" placeholder="例：犬山城、犬山" required>
+                                Accepted answer(s)
+                                <input id="proposal-answer" type="text" maxlength="40" placeholder="e.g. Inuyama Castle, Inuyama" required>
                             </label>
                             <label>
-                                緯度
+                                Latitude
                                 <input id="proposal-latitude" type="number" min="20" max="46" step="0.000001" placeholder="35.388000" required>
                             </label>
                             <label>
-                                経度
+                                Longitude
                                 <input id="proposal-longitude" type="number" min="122" max="154" step="0.000001" placeholder="136.939500" required>
                             </label>
                         </div>
-                        <button class="primary-button" type="submit">問題を追加 <span>＋</span></button>
+                        <button class="primary-button" type="submit">Add question <span>＋</span></button>
                     </form>
 
                     <div class="proposal-list-heading">
-                        <h2>提案された問題</h2>
-                        <span id="proposal-count">0問</span>
+                        <h2>Suggested questions</h2>
+                        <span id="proposal-count">0 questions</span>
                     </div>
                     <div id="proposal-grid" class="proposal-grid"></div>
                 </div>
@@ -803,7 +803,7 @@
             <section
                 id="home-screen"
                 class="screen"
-                aria-label="ホーム画面"
+                aria-label="Home screen"
                 hidden>
 
                 <div class="home-container">
@@ -815,13 +815,13 @@
                         </span>
 
                         <h1>
-                            日本のどこかを<br>
-                            見つけよう。
+                            Find the place<br>
+                            in Japan.
                         </h1>
 
                         <p>
-                            航空写真を手がかりにして、
-                            日本のどこなのかを推理してください。
+                            Use satellite imagery as your clue
+                            and figure out where you are.
                         </p>
 
                     </div>
@@ -839,11 +839,11 @@
                             </span>
 
                             <span class="mode-card-title">
-                                通常モード
+                                Normal mode
                             </span>
 
                             <span class="mode-card-description">
-                                7問の問題に挑戦　ちゃんと練習したかな？<div class=""></div>
+                                Answer 7 questions from the full collection.
                             </span>
 
                             <span class="mode-card-arrow">
@@ -862,11 +862,11 @@
                             </span>
 
                             <span class="mode-card-title">
-                                練習モード
+                                Practice mode
                             </span>
 
                             <span class="mode-card-description">
-                                設定した問題数で練習。最大30問まで遊べます。
+                                Practice with your chosen number of questions, up to 30.
                             </span>
 
                             <span class="mode-card-arrow">
@@ -888,11 +888,11 @@
 
                             <div>
                                 <strong>
-                                    正解すると高得点
+                                    Score big for correct answers
                                 </strong>
 
                                 <p>
-                                    都道府県と場所名が一致すると得点になります。
+                                    Match both the prefecture and place name to score.
                                 </p>
                             </div>
 
@@ -906,11 +906,11 @@
 
                             <div>
                                 <strong>
-                                    時間との勝負
+                                    Race the clock
                                 </strong>
 
                                 <p>
-                                    制限時間内にできるだけ正確に回答してください。
+                                    Answer as accurately as possible before time runs out.
                                 </p>
                             </div>
 
@@ -924,11 +924,11 @@
 
                             <div>
                                 <strong>
-                                    地形を観察
+                                    Study the landscape
                                 </strong>
 
                                 <p>
-                                    道路、山、川、市街地などが重要な手がかりになります。
+                                    Roads, mountains, rivers, and cities are useful clues.
                                 </p>
                             </div>
 
@@ -947,7 +947,7 @@
             <section
                 id="settings-screen"
                 class="screen"
-                aria-label="設定画面"
+                aria-label="Settings screen"
                 hidden>
 
                 <div class="settings-container">
@@ -959,7 +959,7 @@
                         </span>
 
                         <h1>
-                            設定
+                            Settings
                         </h1>
 
                     </div>
@@ -968,7 +968,7 @@
                     <div class="settings-section">
 
                         <h2>
-                            ゲーム
+                            Game
                         </h2>
 
                         <div class="setting-row">
@@ -976,11 +976,11 @@
                             <div class="setting-information">
 
                                 <strong>
-                                    問題数
+                                    Question count
                                 </strong>
 
                                 <p>
-                                    1ゲームあたりの問題数です。
+                                    Number of questions per game.
                                 </p>
 
                             </div>
@@ -990,19 +990,19 @@
                                 class="setting-select">
 
                                 <option value="5">
-                                    5問
+                                    5 questions
                                 </option>
 
                                 <option value="10" selected>
-                                    10問
+                                    10 questions
                                 </option>
 
                                 <option value="20">
-                                    20問
+                                    20 questions
                                 </option>
 
                                 <option value="30">
-                                    30問
+                                    30 questions
                                 </option>
 
                             </select>
@@ -1015,11 +1015,11 @@
                             <div class="setting-information">
 
                                 <strong>
-                                    制限時間
+                                    Time limit
                                 </strong>
 
                                 <p>
-                                    1問あたりの制限時間です。
+                                    Time allowed for each question.
                                 </p>
 
                             </div>
@@ -1029,19 +1029,19 @@
                                 class="setting-select">
 
                                 <option value="30">
-                                    30秒
+                                    30 seconds
                                 </option>
 
                                 <option value="60" selected>
-                                    60秒
+                                    60 seconds
                                 </option>
 
                                 <option value="120">
-                                    120秒
+                                    120 seconds
                                 </option>
 
                                 <option value="0">
-                                    無制限
+                                    Unlimited
                                 </option>
 
                             </select>
@@ -1054,7 +1054,7 @@
                     <div class="settings-section">
 
                         <h2>
-                            表示
+                            Display
                         </h2>
 
                         <div class="setting-row">
@@ -1062,11 +1062,11 @@
                             <div class="setting-information">
 
                                 <strong>
-                                    アニメーション
+                                    Animations
                                 </strong>
 
                                 <p>
-                                    画面のアニメーションを使用します。
+                                    Use interface animations.
                                 </p>
 
                             </div>
@@ -1090,11 +1090,11 @@
                             <div class="setting-information">
 
                                 <strong>
-                                    効果音
+                                    Sound effects
                                 </strong>
 
                                 <p>
-                                    ゲーム中の効果音を使用します。
+                                    Use sound effects during the game.
                                 </p>
 
                             </div>
@@ -1121,7 +1121,7 @@
                             id="save-settings-button"
                             class="primary-button"
                             type="button">
-                            設定を保存
+                            Save settings
                         </button>
 
                     </div>
@@ -1137,7 +1137,7 @@
             <section
                 id="help-screen"
                 class="screen"
-                aria-label="遊び方"
+                aria-label="How to play"
                 hidden>
 
                 <div class="help-container">
@@ -1149,7 +1149,7 @@
                         </span>
 
                         <h1>
-                            遊び方
+                            How to play
                         </h1>
 
                     </div>
@@ -1168,12 +1168,12 @@
                             </div>
 
                             <h2>
-                                写真を見る
+                                Study the image
                             </h2>
 
                             <p>
-                                航空写真をよく観察します。
-                                山、川、道路、建物、農地などを手がかりにしてください。
+                                Study the satellite image carefully.
+                                Use mountains, rivers, roads, buildings, and fields as clues.
                             </p>
 
                         </article>
@@ -1190,11 +1190,11 @@
                             </div>
 
                             <h2>
-                                場所を推測
+                                Guess the place
                             </h2>
 
                             <p>
-                                都道府県を選び、写真が撮影されたと思う場所の名前を入力します。
+                                Select a prefecture and enter the place name you think is shown.
                             </p>
 
                         </article>
@@ -1211,11 +1211,11 @@
                             </div>
 
                             <h2>
-                                回答する
+                                Submit your answer
                             </h2>
 
                             <p>
-                                「回答する」を押すと、入力内容と正解が表示されます。
+                                Press “Submit answer” to reveal your answer and the solution.
                             </p>
 
                         </article>
@@ -1232,11 +1232,11 @@
                             </div>
 
                             <h2>
-                                スコアを獲得
+                                Earn your score
                             </h2>
 
                             <p>
-                                都道府県と場所名の両方が正しいと高いスコアを獲得できます。
+                                Get a high score by matching both the prefecture and place name.
                             </p>
 
                         </article>
@@ -1247,39 +1247,39 @@
                     <div class="help-scoring">
 
                         <h2>
-                            スコアについて
+                            Scoring
                         </h2>
 
                         <div class="scoring-table">
 
                             <div class="scoring-row scoring-header">
-                                <span>回答</span>
-                                <span>評価</span>
+                                <span>Answer</span>
+                                <span>Score</span>
                             </div>
 
                             <div class="scoring-row">
-                                <span>都道府県・場所名が正解</span>
-                                <strong>5000点</strong>
+                                <span>Correct prefecture and place</span>
+                                <strong>5000 points</strong>
                             </div>
 
                             <div class="scoring-row">
-                                <span>場所名のみ正解</span>
-                                <strong>0点</strong>
+                                <span>Place name only</span>
+                                <strong>0 points</strong>
                             </div>
 
                             <div class="scoring-row">
-                                <span>都道府県のみ正解</span>
-                                <strong>0点</strong>
+                                <span>Prefecture only</span>
+                                <strong>0 points</strong>
                             </div>
 
                             <div class="scoring-row">
-                                <span>別名・短縮名</span>
-                                <strong>登録済みなら正解</strong>
+                                <span>Aliases and short names</span>
+                                <strong>Accepted when registered</strong>
                             </div>
 
                             <div class="scoring-row">
-                                <span>時間切れ・未回答</span>
-                                <strong>0点</strong>
+                                <span>Time out or no answer</span>
+                                <strong>0 points</strong>
                             </div>
 
                         </div>
@@ -1301,7 +1301,7 @@
             <div class="footer-left">
 
                 <span>
-                    日本どこでしょう？
+                    Where's this?
                 </span>
 
                 <span class="footer-separator">
@@ -1319,13 +1319,13 @@
                 <button
                     id="footer-help-button"
                     type="button">
-                    遊び方
+                    How to play
                 </button>
 
                 <button
                     id="footer-settings-button"
                     type="button">
-                    設定
+                    Settings
                 </button>
 
             </div>
@@ -1354,7 +1354,7 @@
                 id="close-result-modal-button"
                 class="modal-close-button"
                 type="button"
-                aria-label="閉じる">
+                aria-label="Close">
                 ×
             </button>
 
@@ -1367,7 +1367,7 @@
                 </span>
 
                 <h2 id="answer-result-title">
-                    回答結果
+                    Answer result
                 </h2>
 
             </div>
@@ -1376,7 +1376,7 @@
             <div class="answer-result-score">
 
                 <span>
-                    今回の得点
+                    Score for this answer
                 </span>
 
                 <strong id="answer-score">
@@ -1395,7 +1395,7 @@
                 <div class="answer-result-item">
 
                     <span>
-                        正解地点
+                        Correct location
                     </span>
 
                     <strong id="correct-location-name">
@@ -1407,7 +1407,7 @@
                 <div class="answer-result-item">
 
                     <span>
-                        正解地点まで
+                        Distance to correct location
                     </span>
 
                     <strong id="answer-distance">
@@ -1419,7 +1419,7 @@
                 <div class="answer-result-item">
 
                     <span>
-                                    入力した答え
+                        Your answer
                     </span>
 
                     <strong id="player-location-name">
@@ -1446,7 +1446,7 @@
                 class="primary-button full-width-button"
                 type="button">
 
-                次の問題
+                Next question
                 <span>→</span>
 
             </button>
@@ -1475,7 +1475,7 @@
                 id="close-hint-modal-button"
                 class="modal-close-button"
                 type="button"
-                aria-label="閉じる">
+                    aria-label="Close">
                 ×
             </button>
 
@@ -1486,7 +1486,7 @@
                 </span>
 
                 <h2 id="hint-title">
-                    ヒント
+                    Hint
                 </h2>
 
             </div>
@@ -1500,7 +1500,7 @@
                 </div>
 
                 <p id="hint-modal-text">
-                    ヒントはここに表示されます。
+                    Your hint will appear here.
                 </p>
 
             </div>
@@ -1510,7 +1510,7 @@
                 class="secondary-button full-width-button"
                 type="button">
 
-                閉じる
+                Close
 
             </button>
 
@@ -1541,11 +1541,11 @@
                 </span>
 
                 <h2 id="quit-title">
-                    ゲームを終了しますか？
+                    Quit the game?
                 </h2>
 
                 <p>
-                    現在のゲームの進行状況は失われます。
+                    Your current progress will be lost.
                 </p>
 
             </div>
@@ -1556,14 +1556,14 @@
                     id="cancel-quit-button"
                     class="secondary-button"
                     type="button">
-                    キャンセル
+                    Cancel
                 </button>
 
                 <button
                     id="confirm-quit-button"
                     class="danger-button"
                     type="button">
-                    終了する
+                    Quit
                 </button>
 
             </div>

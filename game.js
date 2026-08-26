@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return undefined;
         })
         .catch(() => {
-            showNotification('地図ライブラリの読み込みに失敗しました。通信環境をご確認ください。', 'error');
+            showNotification('Could not load the map library. Please check your connection.', 'error');
         });
 });
 
@@ -514,16 +514,16 @@ function addProposal(event) {
     saveProposals();
     el.proposalForm.reset();
     renderProposals();
-    showNotification('問題を追加しました。', 'success');
+    showNotification('Question added.', 'success');
 }
 
 function renderProposals() {
     if (!el.proposalGrid) return;
     el.proposalGrid.innerHTML = '';
-    el.proposalCount.textContent = `${state.proposals.length}問`;
+    el.proposalCount.textContent = `${state.proposals.length} question${state.proposals.length === 1 ? '' : 's'}`;
 
     if (!state.proposals.length) {
-        el.proposalGrid.innerHTML = '<p class="proposal-empty">まだ提案問題がありません。最初の問題を追加しましょう。</p>';
+        el.proposalGrid.innerHTML = '<p class="proposal-empty">No suggested questions yet. Add the first one.</p>';
         return;
     }
 
@@ -534,9 +534,9 @@ function renderProposals() {
             <span class="proposal-card-number">${index + 1}</span>
             <div>
                 <h3>${escapeHtml(proposal.name)}</h3>
-                <p>${escapeHtml(proposal.pref)} ・ 答え：${escapeHtml(proposal.answers.join('、'))}</p>
-            </div>
-            <button class="secondary-button" type="button" data-proposal-index="${index}">この問題で遊ぶ <span>→</span></button>
+                <p>${escapeHtml(proposal.pref)} · Answers: ${escapeHtml(proposal.answers.join(', '))}</p>
+                </div>
+                <button class="secondary-button" type="button" data-proposal-index="${index}">Play this question <span>→</span></button>
         `;
         card.querySelector('button').addEventListener('click', () => startProposal(proposal));
         el.proposalGrid.appendChild(card);
@@ -552,7 +552,7 @@ function saveSettingsFromForm() {
     localStorage.setItem('jlg-settings', JSON.stringify(state.settings));
 
     applyAnimationSetting();
-    showNotification('設定を保存しました。', 'success');
+    showNotification('Settings saved.', 'success');
 }
 
 function applyAnimationSetting() {
@@ -645,7 +645,7 @@ function nextRound() {
         startedAt: Date.now()
     };
 
-    el.questionNumber.textContent = `第${session.index + 1}問`;
+    el.questionNumber.textContent = `Question ${session.index + 1}`;
     el.questionTotal.textContent = `/ ${session.total}`;
     el.roundValue.textContent = `${session.index + 1} / ${session.total}`;
 
@@ -674,7 +674,7 @@ function finishGame() {
     el.resultTitle.textContent = session.mode === 'challenge' ? '通常モードの結果' : '練習モードの結果';
     el.shareResultText.textContent = session.mode === 'challenge' ? '7問のスコアを共有' : 'スコアを共有';
     el.resultCorrect.textContent = `${correctCount} / ${results.length}`;
-    el.resultAverageDistance.textContent = '入力判定';
+    el.resultAverageDistance.textContent = 'Text judged';
     el.resultBestScore.textContent = String(bestScore);
     el.resultTime.textContent = formatDuration(elapsedMs);
 
@@ -692,9 +692,8 @@ function renderResultItems(results) {
         item.innerHTML = `
             <span class="result-item-number">${index + 1}</span>
             <div class="result-item-location">
-                <strong>${escapeHtml(r.target.name)}（${escapeHtml(r.target.pref)}）</strong>
-                <span>${r.answer ? (r.correct ? '正解' : '不正解') : '未回答'}</span>
-                    <span>${r.skipped ? 'スキップ' : r.answer ? (r.correct ? '正解' : '不正解') : '未回答'}</span>
+                <strong>${escapeHtml(r.target.name)} (${escapeHtml(r.target.pref)})</strong>
+                <span>${r.skipped ? 'Skipped' : r.answer ? (r.correct ? 'Correct' : 'Incorrect') : 'No answer'}</span>
             </div>
             <span class="result-item-score">${r.score} pt</span>
         `;
@@ -760,7 +759,7 @@ function loadPhoto(target) {
     setTimeout(() => state.photoMap.invalidateSize(), 50);
 
     el.photoSourceLabel.textContent = 'SATELLITE VIEW';
-    el.photoCaption.textContent = '写真から場所を推測してください。';
+    el.photoCaption.textContent = 'Guess the location from the image.';
     el.photoMetaResolution.textContent = 'Zoom 15';
     el.photoMetaType.textContent = 'Aerial';
 }
@@ -768,7 +767,7 @@ function loadPhoto(target) {
 function toggleFullscreenPhoto() {
     if (!document.fullscreenElement) {
         el.photoContainer.requestFullscreen?.().catch(() => {
-            showNotification('全画面表示に対応していません。', 'error');
+            showNotification('Fullscreen is not supported.', 'error');
         });
     } else {
         document.exitFullscreen?.();
@@ -838,7 +837,7 @@ function submitAnswer() {
 
 function handleTimeUp() {
     if (!state.round || state.round.submitted) return;
-    showNotification('時間切れです。', 'error');
+    showNotification('Time is up.', 'error');
     completeRound(null, null, false);
 }
 
@@ -908,10 +907,10 @@ function showAnswerResult(target, prefecture, answer, distanceKm, score, isCorre
     el.answerScore.textContent = String(score);
     el.resultStatusLabel.textContent = skipped ? 'SKIPPED' : isCorrect ? 'CORRECT' : 'INCORRECT';
     el.correctLocationName.textContent = `${target.name}（${target.pref}）`;
-    el.answerDistance.textContent = skipped ? 'スキップ' : answer ? (isCorrect ? '正解' : '不正解') : '未回答';
-    el.playerLocationName.textContent = skipped ? 'スキップ' : prefecture && answer
+    el.answerDistance.textContent = skipped ? 'Skipped' : answer ? (isCorrect ? 'Correct' : 'Incorrect') : 'No answer';
+    el.playerLocationName.textContent = skipped ? 'Skipped' : prefecture && answer
         ? `${prefecture} ${answer}`
-        : '未回答';
+        : 'No answer';
 
     openModal(el.answerResultModal);
     renderResultMap(target, null);
@@ -1013,7 +1012,7 @@ function stopTimer() {
 
 function updateHintText(target) {
     const type = getLocationType(target);
-    const hint = `これは${type}です。${target.region}（${target.pref}）にあります。`;
+    const hint = `This is ${type}. It is in ${target.region} (${target.pref}).`;
     el.hintText.textContent = hint;
     el.hintModalText.textContent = hint;
 }
@@ -1021,15 +1020,15 @@ function updateHintText(target) {
 function getLocationType(target) {
     const name = target.name;
 
-    if (name.includes('空港')) return '空港・滑走路';
-    if (name.includes('ジャンクション')) return '高速道路のジャンクション';
-    if (name.includes('インターチェンジ')) return '高速道路のインターチェンジ';
-    if (name.endsWith('駅')) return '駅';
-    if (name.includes('城')) return '城';
-    if (/寺|神社|神宮|大社|宮|堂/.test(name)) return '寺社・歴史建築';
-    if (name.includes('島')) return '島・離島';
-    if (/山|湖|沼|砂丘|峡|湾|浜|松原|高原|温泉|渦潮/.test(name)) return '自然景勝地';
-    return '観光施設・名所';
+    if (name.includes('空港')) return 'an airport or runway';
+    if (name.includes('ジャンクション')) return 'a highway junction';
+    if (name.includes('インターチェンジ')) return 'an interchange';
+    if (name.endsWith('駅')) return 'a train station';
+    if (name.includes('城')) return 'a castle';
+    if (/寺|神社|神宮|大社|宮|堂/.test(name)) return 'a temple or historic landmark';
+    if (name.includes('島')) return 'an island';
+    if (/山|湖|沼|砂丘|峡|湾|浜|松原|高原|温泉|渦潮/.test(name)) return 'a natural landmark';
+    return 'a landmark';
 }
 
 function openModal(modal) {
@@ -1089,22 +1088,22 @@ function shareResults() {
     if (!state.session || !state.session.results.length) return;
     const session = state.session;
     const correctCount = session.results.filter((result) => result.correct).length;
-    const modeLabel = session.mode === 'challenge' ? '通常モード（7問）' : `練習モード（${session.results.length}問）`;
-    const text = `日本どこでしょう？ ${modeLabel}\nスコア：${session.totalScore}ポイント / ${correctCount}問正解\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? '正解' : '不正解'}`).join('\n')}`;
+    const modeLabel = session.mode === 'challenge' ? 'Normal mode (7 questions)' : `Practice mode (${session.results.length} questions)`;
+    const text = `Where's this? ${modeLabel}\nScore: ${session.totalScore} points / ${correctCount} correct\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? 'Correct' : 'Incorrect'}`).join('\n')}`;
 
     if (navigator.share) {
-        navigator.share({ title: '日本どこでしょう？ 結果', text }).catch(() => {});
+        navigator.share({ title: "Where's this? Results", text }).catch(() => {});
         return;
     }
 
     if (!navigator.clipboard || !navigator.clipboard.writeText) {
-        showNotification('共有に対応していません。', 'error');
+        showNotification('Sharing is not supported.', 'error');
         return;
     }
 
     navigator.clipboard.writeText(text).then(() => {
-        showNotification('回答結果をコピーしました。', 'success');
-    }).catch(() => showNotification('共有に対応していません。', 'error'));
+        showNotification('Results copied to the clipboard.', 'success');
+    }).catch(() => showNotification('Sharing is not supported.', 'error'));
 }
 
 function escapeHtml(str) {
@@ -1153,7 +1152,7 @@ function bindEvents() {
         if (state.session && state.session.results.length) {
             showScreen('result');
         } else {
-            showNotification('まだ結果がありません。', 'error');
+            showNotification('There are no results yet.', 'error');
             closeSideMenu();
         }
     });
