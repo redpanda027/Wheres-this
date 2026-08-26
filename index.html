@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="日本の航空写真を見て、その場所が日本のどこなのかを当てる地理ゲーム。">
+    <meta name="theme-color" content="#111827">
+
+    <title>日本どこでしょう？</title>
+
+    <!--
+        このHTMLファイルはゲーム全体の「骨組み」です。
+
+        今後追加する予定のもの：
+        - CSSによる本格的なデザイン
+        - JavaScriptによるゲームシステム
+        - 地図表示
+        - 航空写真表示
+        - ランダム出題
+        - 回答地点の選択
+        - 正解地点の表示
+        - 距離計算
+        - スコア計算
+        - タイマー
+        - 結果画面
+        - 設定画面
+    -->
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ============================================================
+         アプリ全体
+         ============================================================ -->
+    <div id="app">
+
+        <!-- ========================================================
+             ヘッダー
+             ======================================================== -->
+        <header id="site-header">
+
+            <div class="header-left">
+
+                <button
+                    id="menu-button"
+                    class="icon-button"
+                    type="button"
+                    aria-label="メニューを開く"
+                    aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <a
+                    id="logo"
+                    class="logo"
+                    href="#"
+                    aria-label="日本どこでしょう？ ホーム">
+                    <span class="logo-main">日本どこでしょう？</span>
+                    <span class="logo-sub">JAPAN LOCATION GAME</span>
+                </a>
+
+            </div>
+
+            <div class="header-center">
+
+                <div
+                    id="game-progress"
+                    class="game-progress"
+                    aria-label="ゲーム進行状況">
+
+                    <span
+                        id="question-number"
+                        class="progress-text">
+                        第1問
+                    </span>
+
+                    <span
+                        id="question-total"
+                        class="progress-text">
+                        / 10
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="header-right">
+
+                <div
+                    id="header-score"
+                    class="header-stat"
+                    aria-label="現在のスコア">
+                    <span class="header-stat-label">SCORE</span>
+                    <span id="score-value">0</span>
+                </div>
+
+                <div
+                    id="header-timer"
+                    class="header-stat timer-stat"
+                    aria-label="残り時間">
+                    <span class="header-stat-label">TIME</span>
+                    <span id="timer-value">60</span>
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ========================================================
+             サイドメニュー
+             ======================================================== -->
+        <aside
+            id="side-menu"
+            class="side-menu"
+            aria-hidden="true">
+
+            <div class="side-menu-header">
+
+                <h2>メニュー</h2>
+
+                <button
+                    id="close-menu-button"
+                    class="icon-button close-button"
+                    type="button"
+                    aria-label="メニューを閉じる">
+                    ×
+                </button>
+
+            </div>
+
+            <nav class="side-navigation" aria-label="メインメニュー">
+
+                <button
+                    id="menu-home"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">⌂</span>
+                    <span>ゲーム</span>
+                </button>
+
+                <button
+                    id="menu-results"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">★</span>
+                    <span>結果</span>
+                </button>
+
+                <button
+                    id="menu-settings"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">⚙</span>
+                    <span>設定</span>
+                </button>
+
+                <button
+                    id="menu-help"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">?</span>
+                    <span>遊び方</span>
+                </button>
+
+            </nav>
+
+            <div class="side-menu-footer">
+                <p>Japan Location Game</p>
+                <p class="version">Version 1.0</p>
+            </div>
+
+        </aside>
+
+
+        <!-- メニュー表示時の背景 -->
+        <div
+            id="menu-overlay"
+            class="menu-overlay"
+            aria-hidden="true">
+        </div>
+
+
+        <!-- ========================================================
+             メインコンテンツ
+             ======================================================== -->
+        <main id="main-content">
+
+            <!-- ====================================================
+                 ゲーム画面
+                 ==================================================== -->
+            <section
+                id="game-screen"
+                class="screen active-screen"
+                aria-label="ゲーム画面">
+
+                <!-- ================================================
+                     上部情報
+                     ================================================ -->
+                <section
+                    id="game-info"
+                    class="game-info-panel">
+
+                    <div class="game-info-left">
+
+                        <p
+                            id="game-mode-label"
+                            class="small-label">
+                            JAPAN LOCATION
+                        </p>
+
+                        <h1 id="game-title">
+                            この場所は日本のどこ？
+                        </h1>
+
+                    </div>
+
+                    <div class="game-info-right">
+
+                        <div class="round-info">
+
+                            <span class="small-label">
+                                ROUND
+                            </span>
+
+                            <strong id="round-value">
+                                1 / 10
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ================================================
+                     メインゲームエリア
+                     ================================================ -->
+                <section
+                    id="game-area"
+                    class="game-area">
+
+                    <!-- ============================================
+                         左：航空写真
+                         ============================================ -->
+                    <section
+                        id="photo-panel"
+                        class="game-panel photo-panel"
+                        aria-label="航空写真">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <span class="panel-kicker">
+                                    LOCATION
+                                </span>
+
+                                <h2>
+                                    この場所を見つけよう
+                                </h2>
+                            </div>
+
+                            <button
+                                id="photo-fullscreen-button"
+                                class="secondary-button"
+                                type="button"
+                                aria-label="航空写真を拡大">
+                                ⛶
+                            </button>
+
+                        </div>
+
+                        <div
+                            id="photo-container"
+                            class="photo-container">
+
+                            <!--
+                                JavaScriptによって
+                                <img> がここに入ります。
+                            -->
+
+                            <div
+                                id="photo-placeholder"
+                                class="photo-placeholder">
+
+                                <div class="placeholder-icon">
+                                    ◎
+                                </div>
+
+                                <p class="placeholder-title">
+                                    航空写真を読み込んでいます
+                                </p>
+
+                                <p class="placeholder-description">
+                                    写真が表示されるまでお待ちください。
+                                </p>
+
+                            </div>
+
+                            <img
+                                id="location-photo"
+                                class="location-photo"
+                                src=""
+                                alt="出題された場所の航空写真"
+                                hidden>
+
+                            <div
+                                id="photo-loading"
+                                class="loading-indicator"
+                                hidden>
+
+                                <span class="loading-spinner"></span>
+
+                                <span>
+                                    Loading...
+                                </span>
+
+                            </div>
+
+                            <div
+                                id="photo-error"
+                                class="error-message"
+                                hidden>
+
+                                <span class="error-icon">!</span>
+
+                                <div>
+                                    <strong>
+                                        写真を読み込めませんでした
+                                    </strong>
+
+                                    <p>
+                                        画像ファイルを確認してください。
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <!-- 写真上に表示する情報 -->
+                            <div
+                                id="photo-overlay"
+                                class="photo-overlay">
+
+                                <span
+                                    id="photo-source-label"
+                                    class="photo-badge">
+                                    SATELLITE VIEW
+                                </span>
+
+                                <span
+                                    id="photo-question-hint"
+                                    class="photo-badge">
+                                    ?
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="photo-footer">
+
+                            <div
+                                id="photo-caption"
+                                class="photo-caption">
+                                写真から場所を推測してください。
+                            </div>
+
+                            <div
+                                id="photo-meta"
+                                class="photo-meta">
+
+                                <span id="photo-meta-resolution">
+                                    --
+                                </span>
+
+                                <span class="meta-separator">
+                                    •
+                                </span>
+
+                                <span id="photo-meta-type">
+                                    Aerial
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- ============================================
+                         右：回答地図
+                         ============================================ -->
+                    <section
+                        id="map-panel"
+                        class="game-panel map-panel"
+                        aria-label="回答用地図">
+
+                        <div class="panel-header">
+
+                            <div>
+                                <span class="panel-kicker">
+                                    ANSWER
+                                </span>
+
+                                <h2>
+                                    答えを入力
+                                </h2>
+                            </div>
+
+                            <div
+                                id="map-status"
+                                class="map-status">
+                                入力式
+                            </div>
+
+                        </div>
+
+                        <div
+                            id="answer-entry-container"
+                            class="answer-entry-container">
+
+                            <div class="answer-entry-mark" aria-hidden="true">?</div>
+
+                            <label for="answer-input" class="answer-entry-label">
+                                都道府県と場所を選んでください
+                            </label>
+
+                            <select
+                                id="prefecture-input"
+                                class="prefecture-input"
+                                aria-label="都道府県を選択">
+                                <option value="">都道府県を選択</option>
+                            </select>
+
+                            <input
+                                id="answer-input"
+                                class="answer-input"
+                                type="text"
+                                autocomplete="off"
+                                spellcheck="false"
+                                placeholder="場所名を入力（例：東京駅）"
+                                aria-describedby="answer-input-help">
+
+                            <p id="answer-input-help" class="answer-input-help">
+                                写真から分かる施設名や場所名を入力してください。
+                            </p>
+
+                        </div>
+
+
+                        <!-- 地図下の回答情報 -->
+                        <div class="answer-footer">
+
+                            <div class="answer-instruction">
+
+                                <span
+                                    id="answer-icon"
+                                    class="answer-icon">
+                                    ●
+                                </span>
+
+                                <div>
+                                    <strong>
+                                        答えを入力
+                                    </strong>
+
+                                    <p>
+                                        場所の名前を入力して回答してください。
+                                    </p>
+                                </div>
+
+                            </div>
+
+                            <button
+                                id="submit-answer-button"
+                                class="primary-button"
+                                type="button"
+                                disabled>
+
+                                <span>
+                                    回答する
+                                </span>
+
+                                <span class="button-arrow">
+                                    →
+                                </span>
+
+                            </button>
+
+                            <button
+                                id="skip-answer-button"
+                                class="secondary-button skip-button"
+                                type="button">
+                                スキップ
+                            </button>
+
+                        </div>
+
+                    </section>
+
+                </section>
+
+
+                <!-- ================================================
+                     ゲーム下部
+                     ================================================ -->
+                <section
+                    id="game-bottom"
+                    class="game-bottom">
+
+                    <div
+                        id="hint-panel"
+                        class="hint-panel">
+
+                        <div class="hint-icon">
+                            💡
+                        </div>
+
+                        <div class="hint-content">
+
+                            <span class="small-label">
+                                HINT
+                            </span>
+
+                            <p id="hint-text">
+                                写真に写っている地形、道路、建物、植生などをよく観察してください。
+                            </p>
+
+                        </div>
+
+                        <button
+                            id="hint-button"
+                            class="secondary-button"
+                            type="button">
+                            ヒント
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="keyboard-help"
+                        class="keyboard-help">
+
+                        <span>
+                            <kbd>クリック</kbd>
+                            答えを入力
+                        </span>
+
+                        <span>
+                            <kbd>Enter</kbd>
+                            回答
+                        </span>
+
+                        <span>
+                            <kbd>H</kbd>
+                            ヒント
+                        </span>
+
+                    </div>
+
+                </section>
+
+            </section>
+
+
+            <!-- ====================================================
+                 結果画面
+                 ==================================================== -->
+            <section
+                id="result-screen"
+                class="screen"
+                aria-label="結果画面"
+                hidden>
+
+                <div class="result-container">
+
+                    <div class="result-header">
+
+                        <span class="panel-kicker">
+                            RESULT
+                        </span>
+
+                        <h1>
+                            ラウンド結果
+                        </h1>
+
+                        <p>
+                            今回の回答結果です。
+                        </p>
+
+                    </div>
+
+
+                    <div
+                        id="result-summary"
+                        class="result-summary">
+
+                        <div class="result-main-score">
+
+                            <span class="small-label">
+                                SCORE
+                            </span>
+
+                            <strong id="result-score">
+                                0
+                            </strong>
+
+                            <span>
+                                POINTS
+                            </span>
+
+                        </div>
+
+                        <div class="result-stat-grid">
+
+                            <div class="result-stat">
+
+                                <span>
+                                    正解数
+                                </span>
+
+                                <strong id="result-correct">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <div class="result-stat">
+
+                                <span>
+                                    平均距離
+                                </span>
+
+                                <strong id="result-average-distance">
+                                    --
+                                </strong>
+
+                            </div>
+
+                            <div class="result-stat">
+
+                                <span>
+                                    最大得点
+                                </span>
+
+                                <strong id="result-best-score">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <div class="result-stat">
+
+                                <span>
+                                    使用時間
+                                </span>
+
+                                <strong id="result-time">
+                                    --
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="result-list"
+                        class="result-list">
+
+                        <div class="result-list-header">
+
+                            <h2>
+                                各問題の結果
+                            </h2>
+
+                        </div>
+
+                        <div
+                            id="result-items"
+                            class="result-items">
+
+                            <!-- JavaScriptで追加 -->
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-actions">
+
+                        <button
+                            id="play-again-button"
+                            class="primary-button large-button"
+                            type="button">
+
+                            もう一度遊ぶ
+                            <span>→</span>
+
+                        </button>
+
+                        <button
+                            id="back-home-button"
+                            class="secondary-button large-button"
+                            type="button">
+
+                            ホームへ戻る
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 ホーム画面
+                 ==================================================== -->
+            <section
+                id="home-screen"
+                class="screen"
+                aria-label="ホーム画面"
+                hidden>
+
+                <div class="home-container">
+
+                    <div class="home-hero">
+
+                        <span class="hero-kicker">
+                            JAPAN LOCATION GAME
+                        </span>
+
+                        <h1>
+                            日本のどこかを<br>
+                            見つけよう。
+                        </h1>
+
+                        <p>
+                            航空写真を手がかりにして、
+                            日本のどこなのかを推理してください。
+                        </p>
+
+                    </div>
+
+
+                    <div class="home-mode-grid">
+
+                        <button
+                            id="start-easy-button"
+                            class="mode-card"
+                            type="button">
+
+                            <span class="mode-card-icon">
+                                🗾
+                            </span>
+
+                            <span class="mode-card-title">
+                                かんたんモード
+                            </span>
+
+                            <span class="mode-card-description">
+                                東京駅や有名な観光地など、分かりやすい場所が中心です。
+                            </span>
+
+                            <span class="mode-card-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+
+                        <button
+                            id="start-hard-button"
+                            class="mode-card"
+                            type="button">
+
+                            <span class="mode-card-icon">
+                                🎯
+                            </span>
+
+                            <span class="mode-card-title">
+                                難しいモード
+                            </span>
+
+                            <span class="mode-card-description">
+                                ジャンクションや島など、見分けにくい場所が中心です。
+                            </span>
+
+                            <span class="mode-card-arrow">
+                                →
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <div class="home-information">
+
+                        <div class="information-card">
+
+                            <span class="information-icon">
+                                📍
+                            </span>
+
+                            <div>
+                                <strong>
+                                    正解すると高得点
+                                </strong>
+
+                                <p>
+                                    都道府県と場所名が一致すると得点になります。
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="information-card">
+
+                            <span class="information-icon">
+                                ⏱
+                            </span>
+
+                            <div>
+                                <strong>
+                                    時間との勝負
+                                </strong>
+
+                                <p>
+                                    制限時間内にできるだけ正確に回答してください。
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <div class="information-card">
+
+                            <span class="information-icon">
+                                🔎
+                            </span>
+
+                            <div>
+                                <strong>
+                                    地形を観察
+                                </strong>
+
+                                <p>
+                                    道路、山、川、市街地などが重要な手がかりになります。
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 設定画面
+                 ==================================================== -->
+            <section
+                id="settings-screen"
+                class="screen"
+                aria-label="設定画面"
+                hidden>
+
+                <div class="settings-container">
+
+                    <div class="settings-header">
+
+                        <span class="panel-kicker">
+                            SETTINGS
+                        </span>
+
+                        <h1>
+                            設定
+                        </h1>
+
+                    </div>
+
+
+                    <div class="settings-section">
+
+                        <h2>
+                            ゲーム
+                        </h2>
+
+                        <div class="setting-row">
+
+                            <div class="setting-information">
+
+                                <strong>
+                                    問題数
+                                </strong>
+
+                                <p>
+                                    1ゲームあたりの問題数です。
+                                </p>
+
+                            </div>
+
+                            <select
+                                id="question-count-setting"
+                                class="setting-select">
+
+                                <option value="5">
+                                    5問
+                                </option>
+
+                                <option value="10" selected>
+                                    10問
+                                </option>
+
+                                <option value="20">
+                                    20問
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="setting-row">
+
+                            <div class="setting-information">
+
+                                <strong>
+                                    制限時間
+                                </strong>
+
+                                <p>
+                                    1問あたりの制限時間です。
+                                </p>
+
+                            </div>
+
+                            <select
+                                id="time-limit-setting"
+                                class="setting-select">
+
+                                <option value="30">
+                                    30秒
+                                </option>
+
+                                <option value="60" selected>
+                                    60秒
+                                </option>
+
+                                <option value="120">
+                                    120秒
+                                </option>
+
+                                <option value="0">
+                                    無制限
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-section">
+
+                        <h2>
+                            表示
+                        </h2>
+
+                        <div class="setting-row">
+
+                            <div class="setting-information">
+
+                                <strong>
+                                    アニメーション
+                                </strong>
+
+                                <p>
+                                    画面のアニメーションを使用します。
+                                </p>
+
+                            </div>
+
+                            <label class="toggle">
+
+                                <input
+                                    id="animation-setting"
+                                    type="checkbox"
+                                    checked>
+
+                                <span class="toggle-slider"></span>
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="setting-row">
+
+                            <div class="setting-information">
+
+                                <strong>
+                                    効果音
+                                </strong>
+
+                                <p>
+                                    ゲーム中の効果音を使用します。
+                                </p>
+
+                            </div>
+
+                            <label class="toggle">
+
+                                <input
+                                    id="sound-setting"
+                                    type="checkbox"
+                                    checked>
+
+                                <span class="toggle-slider"></span>
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings-actions">
+
+                        <button
+                            id="save-settings-button"
+                            class="primary-button"
+                            type="button">
+                            設定を保存
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ====================================================
+                 遊び方画面
+                 ==================================================== -->
+            <section
+                id="help-screen"
+                class="screen"
+                aria-label="遊び方"
+                hidden>
+
+                <div class="help-container">
+
+                    <div class="help-header">
+
+                        <span class="panel-kicker">
+                            HOW TO PLAY
+                        </span>
+
+                        <h1>
+                            遊び方
+                        </h1>
+
+                    </div>
+
+
+                    <div class="help-step-grid">
+
+                        <article class="help-step">
+
+                            <span class="help-step-number">
+                                01
+                            </span>
+
+                            <div class="help-step-icon">
+                                👀
+                            </div>
+
+                            <h2>
+                                写真を見る
+                            </h2>
+
+                            <p>
+                                航空写真をよく観察します。
+                                山、川、道路、建物、農地などを手がかりにしてください。
+                            </p>
+
+                        </article>
+
+
+                        <article class="help-step">
+
+                            <span class="help-step-number">
+                                02
+                            </span>
+
+                            <div class="help-step-icon">
+                                🗺
+                            </div>
+
+                            <h2>
+                                場所を推測
+                            </h2>
+
+                            <p>
+                                都道府県を選び、写真が撮影されたと思う場所の名前を入力します。
+                            </p>
+
+                        </article>
+
+
+                        <article class="help-step">
+
+                            <span class="help-step-number">
+                                03
+                            </span>
+
+                            <div class="help-step-icon">
+                                📍
+                            </div>
+
+                            <h2>
+                                回答する
+                            </h2>
+
+                            <p>
+                                「回答する」を押すと、入力内容と正解が表示されます。
+                            </p>
+
+                        </article>
+
+
+                        <article class="help-step">
+
+                            <span class="help-step-number">
+                                04
+                            </span>
+
+                            <div class="help-step-icon">
+                                🏆
+                            </div>
+
+                            <h2>
+                                スコアを獲得
+                            </h2>
+
+                            <p>
+                                都道府県と場所名の両方が正しいと高いスコアを獲得できます。
+                            </p>
+
+                        </article>
+
+                    </div>
+
+
+                    <div class="help-scoring">
+
+                        <h2>
+                            スコアについて
+                        </h2>
+
+                        <div class="scoring-table">
+
+                            <div class="scoring-row scoring-header">
+                                <span>回答</span>
+                                <span>評価</span>
+                            </div>
+
+                            <div class="scoring-row">
+                                <span>都道府県・場所名が正解</span>
+                                <strong>5000点</strong>
+                            </div>
+
+                            <div class="scoring-row">
+                                <span>場所名のみ正解</span>
+                                <strong>0点</strong>
+                            </div>
+
+                            <div class="scoring-row">
+                                <span>都道府県のみ正解</span>
+                                <strong>0点</strong>
+                            </div>
+
+                            <div class="scoring-row">
+                                <span>別名・短縮名</span>
+                                <strong>登録済みなら正解</strong>
+                            </div>
+
+                            <div class="scoring-row">
+                                <span>時間切れ・未回答</span>
+                                <strong>0点</strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- ========================================================
+             フッター
+             ======================================================== -->
+        <footer id="site-footer">
+
+            <div class="footer-left">
+
+                <span>
+                    日本どこでしょう？
+                </span>
+
+                <span class="footer-separator">
+                    •
+                </span>
+
+                <span>
+                    Japan Location Game
+                </span>
+
+            </div>
+
+            <div class="footer-right">
+
+                <button
+                    id="footer-help-button"
+                    type="button">
+                    遊び方
+                </button>
+
+                <button
+                    id="footer-settings-button"
+                    type="button">
+                    設定
+                </button>
+
+            </div>
+
+        </footer>
+
+    </div>
+
+
+    <!-- ============================================================
+         回答結果モーダル
+         ============================================================ -->
+    <div
+        id="answer-result-modal"
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="answer-result-title"
+        hidden>
+
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-window result-modal-window">
+
+            <button
+                id="close-result-modal-button"
+                class="modal-close-button"
+                type="button"
+                aria-label="閉じる">
+                ×
+            </button>
+
+            <div class="modal-header">
+
+                <span
+                    id="result-status-label"
+                    class="result-status-label">
+                    RESULT
+                </span>
+
+                <h2 id="answer-result-title">
+                    回答結果
+                </h2>
+
+            </div>
+
+
+            <div class="answer-result-score">
+
+                <span>
+                    今回の得点
+                </span>
+
+                <strong id="answer-score">
+                    0
+                </strong>
+
+                <span>
+                    POINTS
+                </span>
+
+            </div>
+
+
+            <div class="answer-result-details">
+
+                <div class="answer-result-item">
+
+                    <span>
+                        正解地点
+                    </span>
+
+                    <strong id="correct-location-name">
+                        --
+                    </strong>
+
+                </div>
+
+                <div class="answer-result-item">
+
+                    <span>
+                        正解地点まで
+                    </span>
+
+                    <strong id="answer-distance">
+                        --
+                    </strong>
+
+                </div>
+
+                <div class="answer-result-item">
+
+                    <span>
+                                    入力した答え
+                    </span>
+
+                    <strong id="player-location-name">
+                        --
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="result-map-container"
+                class="result-map-container">
+
+                <div id="result-map">
+                </div>
+
+            </div>
+
+
+            <button
+                id="next-question-button"
+                class="primary-button full-width-button"
+                type="button">
+
+                次の問題
+                <span>→</span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ヒントモーダル
+         ============================================================ -->
+    <div
+        id="hint-modal"
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="hint-title"
+        hidden>
+
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-window hint-modal-window">
+
+            <button
+                id="close-hint-modal-button"
+                class="modal-close-button"
+                type="button"
+                aria-label="閉じる">
+                ×
+            </button>
+
+            <div class="modal-header">
+
+                <span class="result-status-label">
+                    HINT
+                </span>
+
+                <h2 id="hint-title">
+                    ヒント
+                </h2>
+
+            </div>
+
+            <div
+                id="hint-modal-content"
+                class="hint-modal-content">
+
+                <div class="hint-big-icon">
+                    💡
+                </div>
+
+                <p id="hint-modal-text">
+                    ヒントはここに表示されます。
+                </p>
+
+            </div>
+
+            <button
+                id="close-hint-button"
+                class="secondary-button full-width-button"
+                type="button">
+
+                閉じる
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         ゲーム終了確認モーダル
+         ============================================================ -->
+    <div
+        id="quit-modal"
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="quit-title"
+        hidden>
+
+        <div class="modal-backdrop"></div>
+
+        <div class="modal-window small-modal-window">
+
+            <div class="modal-header">
+
+                <span class="result-status-label">
+                    CONFIRM
+                </span>
+
+                <h2 id="quit-title">
+                    ゲームを終了しますか？
+                </h2>
+
+                <p>
+                    現在のゲームの進行状況は失われます。
+                </p>
+
+            </div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancel-quit-button"
+                    class="secondary-button"
+                    type="button">
+                    キャンセル
+                </button>
+
+                <button
+                    id="confirm-quit-button"
+                    class="danger-button"
+                    type="button">
+                    終了する
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         通知
+         ============================================================ -->
+    <div
+        id="notification-container"
+        class="notification-container"
+        aria-live="polite"
+        aria-atomic="true">
+
+        <!-- JavaScriptで通知を追加 -->
+
+    </div>
+
+
+    <!-- ============================================================
+         JavaScript
+         ============================================================ -->
+    <script src="game.js"></script>
+
+</body>
+</html>
