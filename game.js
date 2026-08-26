@@ -207,11 +207,30 @@ const LOCATIONS = [
     ,{ name: '倉敷ジャンクション', answers: ['倉敷ジャンクション', '倉敷JCT', '倉敷'], pref: '岡山県', region: '中国地方', lat: 34.603000, lng: 133.760000 }
     ,{ name: '福岡ジャンクション', answers: ['福岡ジャンクション', '福岡JCT', '福岡'], pref: '福岡県', region: '九州・沖縄地方', lat: 33.613000, lng: 130.475000 }
     ,{ name: '鳥栖ジャンクション', answers: ['鳥栖ジャンクション', '鳥栖JCT', '鳥栖'], pref: '佐賀県', region: '九州・沖縄地方', lat: 33.390000, lng: 130.490000 }
+    ,{ name: '成田国際空港', answers: ['成田国際空港', '成田空港', '成田'], pref: '千葉県', region: '関東地方', lat: 35.772000, lng: 140.392900 }
+    ,{ name: '東京国際空港', answers: ['東京国際空港', '羽田空港', '羽田'], pref: '東京都', region: '関東地方', lat: 35.549400, lng: 139.779800 }
+    ,{ name: '関西国際空港', answers: ['関西国際空港', '関西空港', '関空'], pref: '大阪府', region: '近畿地方', lat: 34.434700, lng: 135.244000 }
+    ,{ name: '中部国際空港', answers: ['中部国際空港', 'セントレア', '中部空港'], pref: '愛知県', region: '中部地方', lat: 34.858400, lng: 136.805000 }
+    ,{ name: '新千歳空港', answers: ['新千歳空港', '新千歳', '千歳空港'], pref: '北海道', region: '北海道地方', lat: 42.775200, lng: 141.692300 }
+    ,{ name: '福岡空港', answers: ['福岡空港', '福岡'], pref: '福岡県', region: '九州・沖縄地方', lat: 33.585900, lng: 130.450700 }
+    ,{ name: '那覇空港', answers: ['那覇空港', '那覇'], pref: '沖縄県', region: '九州・沖縄地方', lat: 26.195800, lng: 127.645900 }
+    ,{ name: '仙台空港', answers: ['仙台空港', '仙台'], pref: '宮城県', region: '東北地方', lat: 38.139700, lng: 140.917000 }
+    ,{ name: '広島空港', answers: ['広島空港', '広島'], pref: '広島県', region: '中国地方', lat: 34.436100, lng: 132.919000 }
+    ,{ name: '熊本空港', answers: ['熊本空港', '熊本'], pref: '熊本県', region: '九州・沖縄地方', lat: 32.837300, lng: 130.855000 }
+    ,{ name: '函館空港', answers: ['函館空港', '函館'], pref: '北海道', region: '北海道地方', lat: 41.770000, lng: 140.821900 }
+    ,{ name: '旭川空港', answers: ['旭川空港', '旭川'], pref: '北海道', region: '北海道地方', lat: 43.670800, lng: 142.447500 }
+    ,{ name: '茨城空港', answers: ['茨城空港', '百里飛行場', '百里基地'], pref: '茨城県', region: '関東地方', lat: 36.181100, lng: 140.415400 }
+    ,{ name: '富山空港', answers: ['富山空港', '富山'], pref: '富山県', region: '中部地方', lat: 36.648300, lng: 137.187500 }
+    ,{ name: '小松空港', answers: ['小松空港', '小松'], pref: '石川県', region: '中部地方', lat: 36.394600, lng: 136.406700 }
+    ,{ name: '岡山空港', answers: ['岡山空港', '岡山'], pref: '岡山県', region: '中国地方', lat: 34.756900, lng: 133.855000 }
+    ,{ name: '高松空港', answers: ['高松空港', '高松'], pref: '香川県', region: '四国地方', lat: 34.214200, lng: 134.015600 }
+    ,{ name: '松山空港', answers: ['松山空港', '松山'], pref: '愛媛県', region: '四国地方', lat: 33.827200, lng: 132.699700 }
+    ,{ name: '鹿児島空港', answers: ['鹿児島空港', '鹿児島'], pref: '鹿児島県', region: '九州・沖縄地方', lat: 31.803400, lng: 130.719400 }
+    ,{ name: '宮崎空港', answers: ['宮崎空港', '宮崎'], pref: '宮崎県', region: '九州・沖縄地方', lat: 31.877200, lng: 131.448600 }
 ];
 
 const JAPAN_CENTER = [36.5, 138.0];
 const JAPAN_DEFAULT_ZOOM = 5;
-const DAILY_QUESTION_LIMIT = 10;
 const EASY_LOCATION_NAMES = new Set([
     '東京駅', '大阪城', '清水寺', '札幌時計台', '博多駅', '首里城跡', '原爆ドーム',
     '名古屋城', '兼六園', '松本城', '鎌倉大仏', '東大寺', '熊本城', '弘前城', '錦帯橋',
@@ -283,11 +302,7 @@ const state = {
 
     timerId: null,
 
-    dailyUsage: {
-        date: '',
-        easy: 0,
-        hard: 0
-    },
+    proposals: [],
 
     photoMap: null,
     photoTileLayer: null,
@@ -308,9 +323,8 @@ const el = {};
 document.addEventListener('DOMContentLoaded', () => {
     cacheElements();
     populatePrefectureOptions();
-    loadDailyUsage();
-    updateDailyModeLabels();
     loadSettings();
+    loadProposals();
     bindEvents();
     showScreen('home');
 
@@ -326,10 +340,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function cacheElements() {
     const ids = [
         'menu-button', 'logo', 'side-menu', 'close-menu-button', 'menu-overlay',
-        'menu-home', 'menu-results', 'menu-settings', 'menu-help',
+        'menu-home', 'menu-results', 'menu-proposals', 'menu-settings', 'menu-help',
         'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer',
 
-        'game-screen', 'result-screen', 'home-screen', 'settings-screen', 'help-screen',
+        'game-screen', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
         'game-mode-label', 'game-title', 'round-value',
 
         'photo-fullscreen-button', 'photo-container', 'photo-placeholder', 'location-photo',
@@ -341,10 +355,14 @@ function cacheElements() {
         'submit-answer-button', 'skip-answer-button',
         'hint-text', 'hint-button', 'keyboard-help',
 
-        'result-score', 'result-correct', 'result-average-distance', 'result-best-score', 'result-time',
+        'result-title', 'result-score', 'result-correct', 'result-average-distance', 'result-best-score', 'result-time',
         'result-items', 'play-again-button', 'back-home-button',
+        'share-result-button', 'share-result-text',
 
-        'start-easy-button', 'start-hard-button',
+        'start-challenge-button', 'start-practice-button',
+
+        'proposal-form', 'proposal-name', 'proposal-prefecture', 'proposal-answer',
+        'proposal-latitude', 'proposal-longitude', 'proposal-grid', 'proposal-count',
 
         'question-count-setting', 'time-limit-setting', 'animation-setting', 'sound-setting', 'save-settings-button',
 
@@ -367,11 +385,13 @@ function cacheElements() {
 }
 
 function populatePrefectureOptions() {
-    PREFECTURES.forEach((prefecture) => {
-        const option = document.createElement('option');
-        option.value = prefecture;
-        option.textContent = prefecture;
-        el.prefectureInput.appendChild(option);
+    [el.prefectureInput, el.proposalPrefecture].forEach((select) => {
+        PREFECTURES.forEach((prefecture) => {
+            const option = document.createElement('option');
+            option.value = prefecture;
+            option.textContent = prefecture;
+            select.appendChild(option);
+        });
     });
 }
 
@@ -384,7 +404,7 @@ function toCamelCase(id) {
    5. 画面切り替え・サイドメニュー
    ================================================================ */
 
-const SCREENS = ['home', 'game', 'result', 'settings', 'help'];
+const SCREENS = ['home', 'game', 'result', 'proposals', 'settings', 'help'];
 
 function showScreen(name) {
     SCREENS.forEach((screenName) => {
@@ -462,47 +482,65 @@ function loadSettings() {
     applyAnimationSetting();
 }
 
-function getTodayKey() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-}
-
-function loadDailyUsage() {
+function loadProposals() {
     try {
-        const saved = JSON.parse(localStorage.getItem('jlg-daily-usage') || 'null');
-        if (saved && saved.date === getTodayKey()) {
-            state.dailyUsage = Object.assign(state.dailyUsage, saved);
-        } else {
-            state.dailyUsage.date = getTodayKey();
-            saveDailyUsage();
-        }
+        const saved = JSON.parse(localStorage.getItem('jlg-proposals') || '[]');
+        state.proposals = Array.isArray(saved) ? saved : [];
     } catch (err) {
-        state.dailyUsage.date = getTodayKey();
+        state.proposals = [];
     }
+    renderProposals();
 }
 
-function saveDailyUsage() {
-    localStorage.setItem('jlg-daily-usage', JSON.stringify(state.dailyUsage));
+function saveProposals() {
+    localStorage.setItem('jlg-proposals', JSON.stringify(state.proposals));
 }
 
-function getDailyRemaining(mode) {
-    return Math.max(0, DAILY_QUESTION_LIMIT - state.dailyUsage[mode]);
+function addProposal(event) {
+    event.preventDefault();
+    const proposal = {
+        name: el.proposalName.value.trim(),
+        answers: el.proposalAnswer.value.split(/[、,，]/).map((value) => value.trim()).filter(Boolean),
+        pref: el.proposalPrefecture.value,
+        region: '提案された問題',
+        lat: Number(el.proposalLatitude.value),
+        lng: Number(el.proposalLongitude.value)
+    };
+
+    if (!proposal.name || !proposal.answers.length || !proposal.pref ||
+        !Number.isFinite(proposal.lat) || !Number.isFinite(proposal.lng)) return;
+
+    state.proposals.unshift(proposal);
+    saveProposals();
+    el.proposalForm.reset();
+    renderProposals();
+    showNotification('問題を追加しました。', 'success');
 }
 
-function consumeDailyQuestion(mode) {
-    state.dailyUsage[mode] += 1;
-    saveDailyUsage();
-    updateDailyModeLabels();
-}
+function renderProposals() {
+    if (!el.proposalGrid) return;
+    el.proposalGrid.innerHTML = '';
+    el.proposalCount.textContent = `${state.proposals.length}問`;
 
-function updateDailyModeLabels() {
-    const easyDescription = document.querySelector('#start-easy-button .mode-card-description');
-    const hardDescription = document.querySelector('#start-hard-button .mode-card-description');
-    if (easyDescription) easyDescription.textContent = `有名な場所中心・本日あと${getDailyRemaining('easy')}問`;
-    if (hardDescription) hardDescription.textContent = `難しい場所中心・本日あと${getDailyRemaining('hard')}問`;
+    if (!state.proposals.length) {
+        el.proposalGrid.innerHTML = '<p class="proposal-empty">まだ提案問題がありません。最初の問題を追加しましょう。</p>';
+        return;
+    }
+
+    state.proposals.forEach((proposal, index) => {
+        const card = document.createElement('article');
+        card.className = 'proposal-card';
+        card.innerHTML = `
+            <span class="proposal-card-number">${index + 1}</span>
+            <div>
+                <h3>${escapeHtml(proposal.name)}</h3>
+                <p>${escapeHtml(proposal.pref)} ・ 答え：${escapeHtml(proposal.answers.join('、'))}</p>
+            </div>
+            <button class="secondary-button" type="button" data-proposal-index="${index}">この問題で遊ぶ <span>→</span></button>
+        `;
+        card.querySelector('button').addEventListener('click', () => startProposal(proposal));
+        el.proposalGrid.appendChild(card);
+    });
 }
 
 function saveSettingsFromForm() {
@@ -527,18 +565,14 @@ function applyAnimationSetting() {
    ================================================================ */
 
 function startGame(mode) {
-    const remaining = getDailyRemaining(mode);
-    if (!remaining) {
-        showNotification('このモードは本日10問までです。明日また挑戦してください。', 'error');
-        return;
-    }
-
-    const questionCount = Math.min(state.settings.questionCount, remaining);
+    const questionCount = mode === 'challenge'
+        ? 7
+        : Math.min(Math.max(state.settings.questionCount, 1), 30);
     const timeLimit = state.settings.timeLimit;
 
     state.session = {
         mode,
-        pool: buildRoundPool(questionCount, mode),
+        pool: buildRoundPool(questionCount),
         index: -1,
         total: questionCount,
         timeLimit,
@@ -550,23 +584,36 @@ function startGame(mode) {
 
     document.body.classList.add('game-active');
 
-    el.gameModeLabel.textContent =
-        mode === 'hard' ? 'HARD MODE' : 'EASY MODE';
+    el.gameModeLabel.textContent = mode === 'challenge' ? 'NORMAL MODE' : 'PRACTICE MODE';
 
     updateScoreDisplay();
     showScreen('game');
     nextRound();
 }
 
-function buildRoundPool(count, mode) {
+function startProposal(proposal) {
+    state.session = {
+        mode: 'proposal',
+        pool: [proposal],
+        index: -1,
+        total: 1,
+        timeLimit: state.settings.timeLimit,
+        totalScore: 0,
+        results: [],
+        startedAt: Date.now(),
+        finished: false
+    };
+    document.body.classList.add('game-active');
+    el.gameModeLabel.textContent = 'COMMUNITY QUESTION';
+    updateScoreDisplay();
+    showScreen('game');
+    nextRound();
+}
+
+function buildRoundPool(count) {
     const availableLocations = LOCATIONS
         .filter((location) => !UNSUITABLE_LOCATION_NAMES.has(location.name));
-    const filteredLocations = availableLocations
-        .filter((location) => {
-            const difficulty = EASY_LOCATION_NAMES.has(location.name) ? 'easy' : 'hard';
-            return difficulty === mode;
-        });
-    const shuffled = shuffleArray((filteredLocations.length >= count ? filteredLocations : availableLocations).slice());
+    const shuffled = shuffleArray(availableLocations.slice());
     const pool = [];
     for (let i = 0; i < count; i++) {
         pool.push(shuffled[i % shuffled.length]);
@@ -592,8 +639,6 @@ function nextRound() {
     }
 
     const target = session.pool[session.index];
-    consumeDailyQuestion(session.mode);
-
     state.round = {
         target,
         submitted: false,
@@ -626,6 +671,8 @@ function finishGame() {
     const elapsedMs = session.finishedAt - session.startedAt;
 
     el.resultScore.textContent = String(session.totalScore);
+    el.resultTitle.textContent = session.mode === 'challenge' ? '通常モードの結果' : '練習モードの結果';
+    el.shareResultText.textContent = session.mode === 'challenge' ? '7問のスコアを共有' : 'スコアを共有';
     el.resultCorrect.textContent = `${correctCount} / ${results.length}`;
     el.resultAverageDistance.textContent = '入力判定';
     el.resultBestScore.textContent = String(bestScore);
@@ -974,6 +1021,7 @@ function updateHintText(target) {
 function getLocationType(target) {
     const name = target.name;
 
+    if (name.includes('空港')) return '空港・滑走路';
     if (name.includes('ジャンクション')) return '高速道路のジャンクション';
     if (name.includes('インターチェンジ')) return '高速道路のインターチェンジ';
     if (name.endsWith('駅')) return '駅';
@@ -1037,6 +1085,28 @@ function formatDuration(ms) {
     return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
+function shareResults() {
+    if (!state.session || !state.session.results.length) return;
+    const session = state.session;
+    const correctCount = session.results.filter((result) => result.correct).length;
+    const modeLabel = session.mode === 'challenge' ? '通常モード（7問）' : `練習モード（${session.results.length}問）`;
+    const text = `日本どこでしょう？ ${modeLabel}\nスコア：${session.totalScore}ポイント / ${correctCount}問正解\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? '正解' : '不正解'}`).join('\n')}`;
+
+    if (navigator.share) {
+        navigator.share({ title: '日本どこでしょう？ 結果', text }).catch(() => {});
+        return;
+    }
+
+    if (!navigator.clipboard || !navigator.clipboard.writeText) {
+        showNotification('共有に対応していません。', 'error');
+        return;
+    }
+
+    navigator.clipboard.writeText(text).then(() => {
+        showNotification('回答結果をコピーしました。', 'success');
+    }).catch(() => showNotification('共有に対応していません。', 'error'));
+}
+
 function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
@@ -1087,6 +1157,7 @@ function bindEvents() {
             closeSideMenu();
         }
     });
+    el.menuProposals.addEventListener('click', () => showScreen('proposals'));
     el.menuSettings.addEventListener('click', () => showScreen('settings'));
     el.menuHelp.addEventListener('click', () => showScreen('help'));
 
@@ -1094,8 +1165,9 @@ function bindEvents() {
     el.footerSettingsButton.addEventListener('click', () => showScreen('settings'));
 
     /* ホーム画面 */
-    el.startEasyButton.addEventListener('click', () => startGame('easy'));
-    el.startHardButton.addEventListener('click', () => startGame('hard'));
+    el.startChallengeButton.addEventListener('click', () => startGame('challenge'));
+    el.startPracticeButton.addEventListener('click', () => startGame('practice'));
+    el.proposalForm.addEventListener('submit', addProposal);
 
     /* ゲーム画面 */
     el.photoFullscreenButton.addEventListener('click', toggleFullscreenPhoto);
@@ -1135,6 +1207,7 @@ function bindEvents() {
         if (state.session) startGame(state.session.mode);
     });
     el.backHomeButton.addEventListener('click', () => showScreen('home'));
+    el.shareResultButton.addEventListener('click', shareResults);
 
     /* 設定画面 */
     el.saveSettingsButton.addEventListener('click', saveSettingsFromForm);

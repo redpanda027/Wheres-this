@@ -59,9 +59,9 @@
                     id="logo"
                     class="logo"
                     href="#"
-                    aria-label="日本どこでしょう？ ホーム">
-                    <span class="logo-main">日本どこでしょう？</span>
-                    <span class="logo-sub">JAPAN LOCATION GAME</span>
+                    aria-label="Wheres this? ホーム">
+                    <span class="logo-main">Where's this?</span>
+                    <span class="logo-sub">日本を見つけよう</span>
                 </a>
 
             </div>
@@ -150,6 +150,14 @@
                     type="button">
                     <span class="menu-item-icon">★</span>
                     <span>結果</span>
+                </button>
+
+                <button
+                    id="menu-proposals"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">＋</span>
+                    <span>みんなの問題</span>
                 </button>
 
                 <button
@@ -587,7 +595,7 @@
                             RESULT
                         </span>
 
-                        <h1>
+                        <h1 id="result-title">
                             ラウンド結果
                         </h1>
 
@@ -717,10 +725,75 @@
 
                         </button>
 
+                        <button
+                            id="share-result-button"
+                            class="secondary-button large-button"
+                            type="button">
+                            <span id="share-result-text">スコアを共有</span>
+                            <span>↗</span>
+                        </button>
+
                     </div>
 
                 </div>
 
+            </section>
+
+
+            <!-- ====================================================
+                 提案問題画面
+                 ==================================================== -->
+            <section
+                id="proposals-screen"
+                class="screen"
+                aria-label="みんなの問題画面"
+                hidden>
+
+                <div class="proposals-container">
+                    <div class="proposals-header">
+                        <span class="panel-kicker">COMMUNITY QUESTIONS</span>
+                        <h1>みんなの問題</h1>
+                        <p>知っている場所を提案して、次の問題に加えましょう。</p>
+                    </div>
+
+                    <form id="proposal-form" class="proposal-form">
+                        <div class="proposal-form-heading">
+                            <h2>新しい問題を提案</h2>
+                            <span>あなたの端末に保存されます</span>
+                        </div>
+                        <div class="proposal-fields">
+                            <label>
+                                場所の名前
+                                <input id="proposal-name" type="text" maxlength="40" placeholder="例：犬山城" required>
+                            </label>
+                            <label>
+                                都道府県
+                                <select id="proposal-prefecture" required>
+                                    <option value="">選択してください</option>
+                                </select>
+                            </label>
+                            <label>
+                                正解として受け付ける答え
+                                <input id="proposal-answer" type="text" maxlength="40" placeholder="例：犬山城、犬山" required>
+                            </label>
+                            <label>
+                                緯度
+                                <input id="proposal-latitude" type="number" min="20" max="46" step="0.000001" placeholder="35.388000" required>
+                            </label>
+                            <label>
+                                経度
+                                <input id="proposal-longitude" type="number" min="122" max="154" step="0.000001" placeholder="136.939500" required>
+                            </label>
+                        </div>
+                        <button class="primary-button" type="submit">問題を追加 <span>＋</span></button>
+                    </form>
+
+                    <div class="proposal-list-heading">
+                        <h2>提案された問題</h2>
+                        <span id="proposal-count">0問</span>
+                    </div>
+                    <div id="proposal-grid" class="proposal-grid"></div>
+                </div>
             </section>
 
 
@@ -757,8 +830,8 @@
                     <div class="home-mode-grid">
 
                         <button
-                            id="start-easy-button"
-                            class="mode-card"
+                            id="start-challenge-button"
+                            class="mode-card mode-card-primary"
                             type="button">
 
                             <span class="mode-card-icon">
@@ -766,11 +839,11 @@
                             </span>
 
                             <span class="mode-card-title">
-                                かんたんモード
+                                通常モード
                             </span>
 
                             <span class="mode-card-description">
-                                東京駅や有名な観光地など、分かりやすい場所が中心です。
+                                7問の問題に挑戦　ちゃんと練習したかな？<div class=""></div>
                             </span>
 
                             <span class="mode-card-arrow">
@@ -779,9 +852,8 @@
 
                         </button>
 
-
                         <button
-                            id="start-hard-button"
+                            id="start-practice-button"
                             class="mode-card"
                             type="button">
 
@@ -790,11 +862,11 @@
                             </span>
 
                             <span class="mode-card-title">
-                                難しいモード
+                                練習モード
                             </span>
 
                             <span class="mode-card-description">
-                                ジャンクションや島など、見分けにくい場所が中心です。
+                                設定した問題数で練習。最大30問まで遊べます。
                             </span>
 
                             <span class="mode-card-arrow">
@@ -927,6 +999,10 @@
 
                                 <option value="20">
                                     20問
+                                </option>
+
+                                <option value="30">
+                                    30問
                                 </option>
 
                             </select>
