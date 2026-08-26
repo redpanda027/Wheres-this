@@ -297,6 +297,8 @@ const state = {
         sound: true
     },
 
+    language: localStorage.getItem('jlg-language') || 'en',
+
     session: null,   // 進行中〜終了後のゲームセッション
     round: null,     // 現在のラウンド情報
 
@@ -326,6 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     loadProposals();
     bindEvents();
+    setLanguage(state.language);
     showScreen('home');
 
     loadLeaflet()
@@ -341,7 +344,7 @@ function cacheElements() {
     const ids = [
         'menu-button', 'logo', 'side-menu', 'close-menu-button', 'menu-overlay',
         'menu-home', 'menu-results', 'menu-proposals', 'menu-settings', 'menu-help',
-        'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer',
+        'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer', 'language-select',
 
         'game-screen', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
         'game-mode-label', 'game-title', 'round-value',
@@ -397,6 +400,98 @@ function populatePrefectureOptions() {
 
 function toCamelCase(id) {
     return id.replace(/-([a-z0-9])/g, (_, c) => c.toUpperCase());
+}
+
+const UI_TRANSLATIONS = {
+    en: {
+        '#menu-button': 'Open menu', '#close-menu-button': 'Close menu', '#menu-home': 'Game',
+        '#menu-results': 'Results', '#menu-proposals': 'Community questions', '#menu-settings': 'Settings',
+        '#menu-help': 'How to play', '#game-title': 'Where in Japan is this?',
+        '.home-hero h1': 'Find the place in Japan.', '.home-hero p': 'Use satellite imagery as your clue and figure out where you are.',
+        '#start-challenge-button .mode-card-title': 'Normal mode',
+        '#start-challenge-button .mode-card-description': 'Answer 7 questions from the full collection.',
+        '#start-practice-button .mode-card-title': 'Practice mode',
+        '#start-practice-button .mode-card-description': 'Practice with your chosen number of questions, up to 30.',
+        '#photo-panel h2': 'Find this place', '#map-panel h2': 'Enter your answer',
+        '.answer-entry-label': 'Select a prefecture and enter the place.',
+        '#answer-input-help': 'Enter the landmark or place name shown in the image.',
+        '.answer-instruction strong': 'Enter your answer', '.answer-instruction p': 'Enter the name of the place to submit your answer.',
+        '#submit-answer-button': 'Submit answer', '#skip-answer-button': 'Skip', '#hint-button': 'Hint',
+        '#result-title': 'Game results', '.result-header p': 'Here are your results.',
+        '#back-home-button': 'Back to home', '#share-result-text': 'Share score',
+        '#proposals-screen h1': 'Community questions', '#proposals-screen > div > div > p': 'Suggest a place and add it to the game.',
+        '#proposal-form h2': 'Suggest a new question', '#proposal-form button': 'Add question',
+        '#settings-screen h1': 'Settings', '#help-screen h1': 'How to play', '#footer-help-button': 'How to play',
+        '#footer-settings-button': 'Settings'
+    },
+    ja: {
+        '#menu-button': 'メニューを開く', '#close-menu-button': 'メニューを閉じる', '#menu-home': 'ゲーム',
+        '#menu-results': '結果', '#menu-proposals': 'みんなの問題', '#menu-settings': '設定', '#menu-help': '遊び方',
+        '#game-title': 'この場所は日本のどこ？', '#photo-panel h2': 'この場所を見つけよう', '#map-panel h2': '答えを入力',
+        '.home-hero h1': '日本のどこかを\n見つけよう。', '.home-hero p': '航空写真を手がかりにして、日本のどこなのかを推理してください。',
+        '#start-challenge-button .mode-card-title': '通常モード',
+        '#start-challenge-button .mode-card-description': '7問に答える、いつものゲーム。',
+        '#start-practice-button .mode-card-title': '練習モード',
+        '#start-practice-button .mode-card-description': '設定した問題数で練習。最大30問まで遊べます。',
+        '.answer-entry-label': '都道府県と場所を選んでください', '#answer-input-help': '写真から分かる施設名や場所名を入力してください。',
+        '.answer-instruction strong': '答えを入力', '.answer-instruction p': '場所の名前を入力して回答してください。',
+        '#submit-answer-button': '回答する', '#skip-answer-button': 'スキップ', '#hint-button': 'ヒント',
+        '#result-title': 'ゲーム結果', '.result-header p': '今回の回答結果です。', '#back-home-button': 'ホームへ戻る',
+        '#share-result-text': 'スコアを共有', '#proposals-screen h1': 'みんなの問題',
+        '#proposals-screen > div > div > p': '知っている場所を提案して、次の問題に加えましょう。',
+        '#proposal-form h2': '新しい問題を提案', '#proposal-form button': '問題を追加',
+        '#settings-screen h1': '設定', '#help-screen h1': '遊び方', '#footer-help-button': '遊び方', '#footer-settings-button': '設定'
+    }
+};
+
+function setLanguage(language) {
+    state.language = language === 'ja' ? 'ja' : 'en';
+    localStorage.setItem('jlg-language', state.language);
+    document.documentElement.lang = state.language;
+    document.title = languageText("Where's this?", '日本どこでしょう？');
+    el.languageSelect.value = state.language;
+
+    Object.entries(UI_TRANSLATIONS[state.language]).forEach(([selector, text]) => {
+        document.querySelectorAll(selector).forEach((element) => {
+            if (element.id === 'menu-button') {
+                element.setAttribute('aria-label', text);
+            } else if (element.id === 'close-menu-button') {
+                element.setAttribute('aria-label', text);
+            } else if (element.classList.contains('menu-item')) {
+                element.querySelector('span:last-child').textContent = text;
+            } else if (element.id === 'submit-answer-button') {
+                element.querySelector('span').textContent = text;
+            } else if (element.matches('button')) {
+                element.textContent = text;
+            } else {
+                element.textContent = text;
+            }
+        });
+    });
+    document.querySelector('.logo-main').textContent = languageText("Where's this?", '日本どこでしょう？');
+    document.querySelector('.logo-sub').textContent = languageText('GUESS JAPAN', '日本を見つけよう');
+    document.querySelectorAll('.header-stat-label').forEach((element, index) => {
+        element.textContent = languageText(index === 0 ? 'SCORE' : 'TIME', index === 0 ? 'スコア' : '時間');
+    });
+    const commonText = state.language === 'ja'
+        ? {
+            '.side-menu-header h2': 'メニュー', '.side-menu-footer p:first-child': '日本どこでしょう？',
+            '.side-menu-footer .version': 'バージョン 1.0', '.result-list-header h2': '各問題の結果',
+            '#game-screen .hint-content p': '写真に写っている地形、道路、建物、植生などをよく観察してください。'
+        }
+        : {
+            '.side-menu-header h2': 'Menu', '.side-menu-footer p:first-child': 'Japan Location Game',
+            '.side-menu-footer .version': 'Version 1.0', '.result-list-header h2': 'Question breakdown',
+            '#game-screen .hint-content p': 'Look closely at the terrain, roads, buildings, and vegetation.'
+        };
+    Object.entries(commonText).forEach(([selector, text]) => {
+        document.querySelectorAll(selector).forEach((element) => { element.textContent = text; });
+    });
+    renderProposals();
+}
+
+function languageText(english, japanese) {
+    return state.language === 'ja' ? japanese : english;
 }
 
 
@@ -520,10 +615,12 @@ function addProposal(event) {
 function renderProposals() {
     if (!el.proposalGrid) return;
     el.proposalGrid.innerHTML = '';
-    el.proposalCount.textContent = `${state.proposals.length} question${state.proposals.length === 1 ? '' : 's'}`;
+    el.proposalCount.textContent = state.language === 'ja'
+        ? `${state.proposals.length}問`
+        : `${state.proposals.length} question${state.proposals.length === 1 ? '' : 's'}`;
 
     if (!state.proposals.length) {
-        el.proposalGrid.innerHTML = '<p class="proposal-empty">No suggested questions yet. Add the first one.</p>';
+        el.proposalGrid.innerHTML = `<p class="proposal-empty">${languageText('No suggested questions yet. Add the first one.', 'まだ提案問題がありません。最初の問題を追加しましょう。')}</p>`;
         return;
     }
 
@@ -534,9 +631,9 @@ function renderProposals() {
             <span class="proposal-card-number">${index + 1}</span>
             <div>
                 <h3>${escapeHtml(proposal.name)}</h3>
-                <p>${escapeHtml(proposal.pref)} · Answers: ${escapeHtml(proposal.answers.join(', '))}</p>
+                <p>${escapeHtml(proposal.pref)} · ${languageText('Answers', '答え')}: ${escapeHtml(proposal.answers.join(', '))}</p>
                 </div>
-                <button class="secondary-button" type="button" data-proposal-index="${index}">Play this question <span>→</span></button>
+                <button class="secondary-button" type="button" data-proposal-index="${index}">${languageText('Play this question', 'この問題で遊ぶ')} <span>→</span></button>
         `;
         card.querySelector('button').addEventListener('click', () => startProposal(proposal));
         el.proposalGrid.appendChild(card);
@@ -584,7 +681,9 @@ function startGame(mode) {
 
     document.body.classList.add('game-active');
 
-    el.gameModeLabel.textContent = mode === 'challenge' ? 'NORMAL MODE' : 'PRACTICE MODE';
+    el.gameModeLabel.textContent = mode === 'challenge'
+        ? languageText('NORMAL MODE', '通常モード')
+        : languageText('PRACTICE MODE', '練習モード');
 
     updateScoreDisplay();
     showScreen('game');
@@ -645,7 +744,7 @@ function nextRound() {
         startedAt: Date.now()
     };
 
-    el.questionNumber.textContent = `Question ${session.index + 1}`;
+    el.questionNumber.textContent = languageText(`Question ${session.index + 1}`, `第${session.index + 1}問`);
     el.questionTotal.textContent = `/ ${session.total}`;
     el.roundValue.textContent = `${session.index + 1} / ${session.total}`;
 
@@ -671,8 +770,12 @@ function finishGame() {
     const elapsedMs = session.finishedAt - session.startedAt;
 
     el.resultScore.textContent = String(session.totalScore);
-    el.resultTitle.textContent = session.mode === 'challenge' ? '通常モードの結果' : '練習モードの結果';
-    el.shareResultText.textContent = session.mode === 'challenge' ? '7問のスコアを共有' : 'スコアを共有';
+    el.resultTitle.textContent = session.mode === 'challenge'
+        ? languageText('Normal mode results', '通常モードの結果')
+        : languageText('Practice mode results', '練習モードの結果');
+    el.shareResultText.textContent = session.mode === 'challenge'
+        ? languageText('Share 7-question score', '7問のスコアを共有')
+        : languageText('Share score', 'スコアを共有');
     el.resultCorrect.textContent = `${correctCount} / ${results.length}`;
     el.resultAverageDistance.textContent = 'Text judged';
     el.resultBestScore.textContent = String(bestScore);
@@ -907,10 +1010,10 @@ function showAnswerResult(target, prefecture, answer, distanceKm, score, isCorre
     el.answerScore.textContent = String(score);
     el.resultStatusLabel.textContent = skipped ? 'SKIPPED' : isCorrect ? 'CORRECT' : 'INCORRECT';
     el.correctLocationName.textContent = `${target.name}（${target.pref}）`;
-    el.answerDistance.textContent = skipped ? 'Skipped' : answer ? (isCorrect ? 'Correct' : 'Incorrect') : 'No answer';
-    el.playerLocationName.textContent = skipped ? 'Skipped' : prefecture && answer
+    el.answerDistance.textContent = skipped ? languageText('Skipped', 'スキップ') : answer ? (isCorrect ? languageText('Correct', '正解') : languageText('Incorrect', '不正解')) : languageText('No answer', '未回答');
+    el.playerLocationName.textContent = skipped ? languageText('Skipped', 'スキップ') : prefecture && answer
         ? `${prefecture} ${answer}`
-        : 'No answer';
+        : languageText('No answer', '未回答');
 
     openModal(el.answerResultModal);
     renderResultMap(target, null);
@@ -1088,11 +1191,16 @@ function shareResults() {
     if (!state.session || !state.session.results.length) return;
     const session = state.session;
     const correctCount = session.results.filter((result) => result.correct).length;
-    const modeLabel = session.mode === 'challenge' ? 'Normal mode (7 questions)' : `Practice mode (${session.results.length} questions)`;
-    const text = `Where's this? ${modeLabel}\nScore: ${session.totalScore} points / ${correctCount} correct\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? 'Correct' : 'Incorrect'}`).join('\n')}`;
+    const modeLabel = session.mode === 'challenge'
+        ? languageText('Normal mode (7 questions)', '通常モード（7問）')
+        : languageText(`Practice mode (${session.results.length} questions)`, `練習モード（${session.results.length}問）`);
+    const text = languageText(
+        `Where's this? ${modeLabel}\nScore: ${session.totalScore} points / ${correctCount} correct\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? 'Correct' : 'Incorrect'}`).join('\n')}`,
+        `日本どこでしょう？ ${modeLabel}\nスコア：${session.totalScore}ポイント / ${correctCount}問正解\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? '正解' : '不正解'}`).join('\n')}`
+    );
 
     if (navigator.share) {
-        navigator.share({ title: "Where's this? Results", text }).catch(() => {});
+        navigator.share({ title: languageText("Where's this? Results", '日本どこでしょう？ 結果'), text }).catch(() => {});
         return;
     }
 
@@ -1141,6 +1249,8 @@ function playChime(success) {
    ================================================================ */
 
 function bindEvents() {
+    el.languageSelect.addEventListener('change', () => setLanguage(el.languageSelect.value));
+
     /* ヘッダー / サイドメニュー */
     el.menuButton.addEventListener('click', openSideMenu);
     el.closeMenuButton.addEventListener('click', closeSideMenu);
