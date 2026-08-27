@@ -292,7 +292,7 @@ function loadLeaflet() {
 const state = {
     settings: {
         questionCount: 10,
-        timeLimit: 60,
+        timeLimit: 120,
         animations: true,
         sound: true
     },
@@ -329,6 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProposals();
     bindEvents();
     setLanguage(state.language);
+    el.gameInfo.after(el.hintPanel);
     showScreen('home');
 
     loadLeaflet()
@@ -336,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return undefined;
         })
         .catch(() => {
-            showNotification('Could not load the map library. Please check your connection.', 'error');
+            showNotification(languageText('Could not load the map library. Please check your connection.', '地図を読み込めませんでした。接続を確認してください。'), 'error');
         });
 });
 
@@ -346,7 +347,7 @@ function cacheElements() {
         'menu-home', 'menu-results', 'menu-proposals', 'menu-settings', 'menu-help',
         'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer', 'language-select',
 
-        'game-screen', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
+        'game-screen', 'game-info', 'hint-panel', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
         'game-mode-label', 'game-title', 'round-value',
 
         'photo-fullscreen-button', 'photo-container', 'photo-placeholder', 'location-photo',
@@ -407,6 +408,15 @@ const UI_TRANSLATIONS = {
         '#menu-button': 'Open menu', '#close-menu-button': 'Close menu', '#menu-home': 'Game',
         '#menu-results': 'Results', '#menu-proposals': 'Community questions', '#menu-settings': 'Settings',
         '#menu-help': 'How to play', '#game-title': 'Where in Japan is this?',
+        '#game-screen': 'Game screen', '#game-progress': 'Game progress', '#header-score': 'Current score',
+        '#header-timer': 'Time remaining', '.language-select-label .sr-only': 'Language', '#language-select': 'Language',
+        '#game-mode-label': 'JAPAN LOCATION', '#photo-panel .panel-kicker': 'LOCATION', '#map-panel .panel-kicker': 'ANSWER',
+        '#photo-fullscreen-button': 'Enlarge satellite image', '#photo-panel .placeholder-title': 'Loading satellite image',
+        '#photo-panel .placeholder-description': 'Please wait while the image loads.', '#photo-loading span:last-child': 'Loading...',
+        '#photo-error strong': 'Could not load the image', '#photo-error p': 'Please check the image file.',
+        '#photo-source-label': 'SATELLITE VIEW', '#photo-caption': 'Guess the location from the image.', '#photo-meta-type': 'Aerial',
+        '#map-status': 'Text entry', '#prefecture-input': 'Select prefecture',
+        '#keyboard-help span:nth-child(1)': 'Enter answer', '#keyboard-help span:nth-child(2)': 'Submit', '#keyboard-help span:nth-child(3)': 'Hint',
         '.home-hero h1': 'Find the place in Japan.', '.home-hero p': 'Use satellite imagery as your clue and figure out where you are.',
         '#start-challenge-button .mode-card-title': 'Normal mode',
         '#start-challenge-button .mode-card-description': 'Answer 7 questions from the full collection.',
@@ -417,17 +427,56 @@ const UI_TRANSLATIONS = {
         '#answer-input-help': 'Enter the landmark or place name shown in the image.',
         '.answer-instruction strong': 'Enter your answer', '.answer-instruction p': 'Enter the name of the place to submit your answer.',
         '#submit-answer-button': 'Submit answer', '#skip-answer-button': 'Skip', '#hint-button': 'Hint',
-        '#result-title': 'Game results', '.result-header p': 'Here are your results.',
+        '#result-title': 'Game results', '.result-header p': 'Here are your results.', '.result-header .panel-kicker': 'RESULT',
+        '.result-main-score .small-label': 'SCORE', '.result-main-score span:last-child': 'POINTS',
+        '.result-stat:nth-child(1) span': 'Correct answers', '.result-stat:nth-child(2) span': 'Average distance',
+        '.result-stat:nth-child(3) span': 'Best question score', '.result-stat:nth-child(4) span': 'Time used',
+        '#play-again-button': 'Play again', '#result-screen .result-list-header h2': 'Question breakdown',
         '#back-home-button': 'Back to home', '#share-result-text': 'Share score',
         '#proposals-screen h1': 'Community questions', '#proposals-screen > div > div > p': 'Suggest a place and add it to the game.',
         '#proposal-form h2': 'Suggest a new question', '#proposal-form button': 'Add question',
         '#settings-screen h1': 'Settings', '#help-screen h1': 'How to play', '#footer-help-button': 'How to play',
-        '#footer-settings-button': 'Settings'
+        '#footer-settings-button': 'Settings', '#proposals-screen .panel-kicker': 'COMMUNITY QUESTIONS',
+        '#settings-screen .panel-kicker': 'SETTINGS', '#help-screen .panel-kicker': 'HOW TO PLAY',
+        '#home-screen .hero-kicker': 'JAPAN LOCATION GAME', '#answer-result-title': 'Answer result',
+        '#close-result-modal-button': 'Close', '#next-question-button': 'Next question', '#hint-title': 'Hint',
+        '#close-hint-modal-button': 'Close', '#close-hint-button': 'Close', '#quit-title': 'Quit the game?',
+        '#cancel-quit-button': 'Cancel', '#confirm-quit-button': 'Quit',
+        '.information-card:nth-child(1) strong': 'Score big for correct answers', '.information-card:nth-child(1) p': 'Match both the prefecture and place name to score.',
+        '.information-card:nth-child(2) strong': 'Race the clock', '.information-card:nth-child(2) p': 'Answer as accurately as possible before time runs out.',
+        '.information-card:nth-child(3) strong': 'Study the landscape', '.information-card:nth-child(3) p': 'Roads, mountains, rivers, and cities are useful clues.',
+        '#proposal-form h2': 'Suggest a new question', '#proposal-form .proposal-form-heading span': 'Saved on this device',
+        '#proposal-form label:nth-child(1)': 'Place name', '#proposal-form label:nth-child(2)': 'Prefecture', '#proposal-form label:nth-child(3)': 'Accepted answer(s)',
+        '#proposal-form label:nth-child(4)': 'Latitude', '#proposal-form label:nth-child(5)': 'Longitude', '.proposal-list-heading h2': 'Suggested questions',
+        '#settings-screen .settings-section:nth-of-type(1) h2': 'Game', '#settings-screen .settings-section:nth-of-type(2) h2': 'Display',
+        '#save-settings-button': 'Save settings', '#hint-modal .result-status-label': 'HINT', '#quit-modal .result-status-label': 'CONFIRM',
+        '#quit-modal .modal-header p': 'Your current progress will be lost.', '#answer-result-modal .answer-result-score span:first-child': 'Score for this answer',
+        '#answer-result-modal .answer-result-score span:last-child': 'POINTS', '#answer-result-modal .answer-result-item:nth-child(1) span': 'Correct location',
+        '#answer-result-modal .answer-result-item:nth-child(2) span': 'Distance to correct location', '#answer-result-modal .answer-result-item:nth-child(3) span': 'Your answer',
+        '#hint-modal-text': 'Your hint will appear here.',
+        '.setting-row:nth-child(1) strong': 'Question count', '.setting-row:nth-child(1) p': 'Number of questions per game.',
+        '.setting-row:nth-child(2) strong': 'Time limit', '.setting-row:nth-child(2) p': 'Time allowed for each question.',
+        '.setting-row:nth-child(3) strong': 'Animations', '.setting-row:nth-child(3) p': 'Use interface animations.',
+        '.setting-row:nth-child(4) strong': 'Sound effects', '.setting-row:nth-child(4) p': 'Use sound effects during the game.',
+        '.help-step:nth-child(1) h2': 'Study the image', '.help-step:nth-child(1) p': 'Study the satellite image carefully. Use mountains, rivers, roads, buildings, and fields as clues.',
+        '.help-step:nth-child(2) h2': 'Guess the place', '.help-step:nth-child(2) p': 'Select a prefecture and enter the place name you think is shown.',
+        '.help-step:nth-child(3) h2': 'Submit your answer', '.help-step:nth-child(3) p': 'Press “Submit answer” to reveal your answer and the solution.',
+        '.help-step:nth-child(4) h2': 'Earn your score', '.help-step:nth-child(4) p': 'Get a high score by matching both the prefecture and place name.',
+        '.help-scoring h2': 'Scoring', '.scoring-header span:first-child': 'Answer', '.scoring-header span:last-child': 'Score',
+        '.scoring-row:nth-child(2) span': 'Correct prefecture and place', '.scoring-row:nth-child(3) span': 'Place name only',
+        '.scoring-row:nth-child(4) span': 'Prefecture only', '.scoring-row:nth-child(5) span': 'Aliases and short names', '.scoring-row:nth-child(6) span': 'Time out or no answer'
     },
     ja: {
         '#menu-button': 'メニューを開く', '#close-menu-button': 'メニューを閉じる', '#menu-home': 'ゲーム',
         '#menu-results': '結果', '#menu-proposals': 'みんなの問題', '#menu-settings': '設定', '#menu-help': '遊び方',
-        '#game-title': 'この場所は日本のどこ？', '#photo-panel h2': 'この場所を見つけよう', '#map-panel h2': '答えを入力',
+        '#game-title': 'この場所は日本のどこ？', '#game-screen': 'ゲーム画面', '#game-progress': 'ゲームの進捗', '#header-score': '現在のスコア',
+        '#header-timer': '残り時間', '.language-select-label .sr-only': '言語', '#language-select': '言語', '#game-mode-label': '日本の場所',
+        '#photo-panel h2': 'この場所を見つけよう', '#map-panel h2': '答えを入力', '#photo-panel .panel-kicker': '場所', '#map-panel .panel-kicker': '回答',
+        '#photo-fullscreen-button': '衛星画像を拡大', '#photo-panel .placeholder-title': '衛星画像を読み込み中',
+        '#photo-panel .placeholder-description': '画像の読み込みをお待ちください。', '#photo-loading span:last-child': '読み込み中...',
+        '#photo-error strong': '画像を読み込めませんでした', '#photo-error p': '画像ファイルを確認してください。',
+        '#photo-source-label': '衛星画像', '#photo-caption': '画像から場所を推理してください。', '#photo-meta-type': '航空写真',
+        '#map-status': '文字入力', '#prefecture-input': '都道府県を選択',
         '.home-hero h1': '日本のどこかを\n見つけよう。', '.home-hero p': '航空写真を手がかりにして、日本のどこなのかを推理してください。',
         '#start-challenge-button .mode-card-title': '通常モード',
         '#start-challenge-button .mode-card-description': '7問に答える、いつものゲーム。',
@@ -436,11 +485,42 @@ const UI_TRANSLATIONS = {
         '.answer-entry-label': '都道府県と場所を選んでください', '#answer-input-help': '写真から分かる施設名や場所名を入力してください。',
         '.answer-instruction strong': '答えを入力', '.answer-instruction p': '場所の名前を入力して回答してください。',
         '#submit-answer-button': '回答する', '#skip-answer-button': 'スキップ', '#hint-button': 'ヒント',
-        '#result-title': 'ゲーム結果', '.result-header p': '今回の回答結果です。', '#back-home-button': 'ホームへ戻る',
+        '#result-title': 'ゲーム結果', '.result-header p': '今回の回答結果です。', '.result-header .panel-kicker': '結果',
+        '.result-main-score .small-label': 'スコア', '.result-main-score span:last-child': 'ポイント',
+        '.result-stat:nth-child(1) span': '正解数', '.result-stat:nth-child(2) span': '平均距離',
+        '.result-stat:nth-child(3) span': '最高得点', '.result-stat:nth-child(4) span': '経過時間',
+        '#play-again-button': 'もう一度遊ぶ', '#result-screen .result-list-header h2': '問題ごとの結果', '#back-home-button': 'ホームへ戻る',
         '#share-result-text': 'スコアを共有', '#proposals-screen h1': 'みんなの問題',
         '#proposals-screen > div > div > p': '知っている場所を提案して、次の問題に加えましょう。',
         '#proposal-form h2': '新しい問題を提案', '#proposal-form button': '問題を追加',
-        '#settings-screen h1': '設定', '#help-screen h1': '遊び方', '#footer-help-button': '遊び方', '#footer-settings-button': '設定'
+        '#settings-screen h1': '設定', '#help-screen h1': '遊び方', '#footer-help-button': '遊び方', '#footer-settings-button': '設定',
+        '#proposals-screen .panel-kicker': 'みんなの問題', '#settings-screen .panel-kicker': '設定', '#help-screen .panel-kicker': '遊び方',
+        '#home-screen .hero-kicker': '日本の場所ゲーム', '#answer-result-title': '回答結果', '#close-result-modal-button': '閉じる',
+        '#next-question-button': '次の問題', '#hint-title': 'ヒント', '#close-hint-modal-button': '閉じる', '#close-hint-button': '閉じる',
+        '#quit-title': 'ゲームを終了しますか？', '#cancel-quit-button': 'キャンセル', '#confirm-quit-button': '終了',
+        '.information-card:nth-child(1) strong': '正解して高得点を狙おう', '.information-card:nth-child(1) p': '都道府県と場所名の両方が合うと得点になります。',
+        '.information-card:nth-child(2) strong': '時間内に答えよう', '.information-card:nth-child(2) p': '時間切れになる前に、できるだけ正確に答えてください。',
+        '.information-card:nth-child(3) strong': '景色を観察しよう', '.information-card:nth-child(3) p': '道路、山、川、街並みが手がかりになります。',
+        '#proposal-form h2': '新しい問題を提案', '#proposal-form .proposal-form-heading span': 'この端末に保存',
+        '#proposal-form label:nth-child(1)': '場所名', '#proposal-form label:nth-child(2)': '都道府県', '#proposal-form label:nth-child(3)': '正解候補',
+        '#proposal-form label:nth-child(4)': '緯度', '#proposal-form label:nth-child(5)': '経度', '.proposal-list-heading h2': '提案された問題',
+        '#settings-screen .settings-section:nth-of-type(1) h2': 'ゲーム', '#settings-screen .settings-section:nth-of-type(2) h2': '表示',
+        '#save-settings-button': '設定を保存', '#hint-modal .result-status-label': 'ヒント', '#quit-modal .result-status-label': '確認',
+        '#quit-modal .modal-header p': '現在の進行状況は失われます。', '#answer-result-modal .answer-result-score span:first-child': 'この回答のスコア',
+        '#answer-result-modal .answer-result-score span:last-child': 'ポイント', '#answer-result-modal .answer-result-item:nth-child(1) span': '正解の場所',
+        '#answer-result-modal .answer-result-item:nth-child(2) span': '正解地点までの距離', '#answer-result-modal .answer-result-item:nth-child(3) span': 'あなたの回答'
+        , '#hint-modal-text': 'ヒントがここに表示されます。',
+        '.setting-row:nth-child(1) strong': '問題数', '.setting-row:nth-child(1) p': '1ゲームあたりの問題数。',
+        '.setting-row:nth-child(2) strong': '制限時間', '.setting-row:nth-child(2) p': '1問あたりの制限時間。',
+        '.setting-row:nth-child(3) strong': 'アニメーション', '.setting-row:nth-child(3) p': '画面のアニメーションを使用します。',
+        '.setting-row:nth-child(4) strong': '効果音', '.setting-row:nth-child(4) p': 'ゲーム中に効果音を使用します。',
+        '.help-step:nth-child(1) h2': '画像を観察', '.help-step:nth-child(1) p': '衛星画像をよく観察し、山、川、道路、建物、畑などを手がかりにしてください。',
+        '.help-step:nth-child(2) h2': '場所を推理', '.help-step:nth-child(2) p': '都道府県を選び、写っていると思う場所名を入力してください。',
+        '.help-step:nth-child(3) h2': '答えを送信', '.help-step:nth-child(3) p': '「回答する」を押すと、あなたの答えと正解が表示されます。',
+        '.help-step:nth-child(4) h2': 'スコアを獲得', '.help-step:nth-child(4) p': '都道府県と場所名の両方を当てて高得点を目指しましょう。',
+        '.help-scoring h2': '採点', '.scoring-header span:first-child': '回答', '.scoring-header span:last-child': 'スコア',
+        '.scoring-row:nth-child(2) span': '都道府県と場所名が正解', '.scoring-row:nth-child(3) span': '場所名のみ',
+        '.scoring-row:nth-child(4) span': '都道府県のみ', '.scoring-row:nth-child(5) span': '登録済みの別名・略称', '.scoring-row:nth-child(6) span': '時間切れ・未回答'
     }
 };
 
@@ -457,6 +537,13 @@ function setLanguage(language) {
                 element.setAttribute('aria-label', text);
             } else if (element.id === 'close-menu-button') {
                 element.setAttribute('aria-label', text);
+            } else if (['game-screen', 'game-progress', 'header-score', 'header-timer'].includes(element.id)) {
+                element.setAttribute('aria-label', text);
+            } else if (element.tagName === 'SELECT') {
+                element.setAttribute('aria-label', text);
+            } else if (element.tagName === 'LABEL') {
+                const textNode = Array.from(element.childNodes).find((node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim());
+                if (textNode) textNode.textContent = `\n                                ${text}\n                                `;
             } else if (element.classList.contains('menu-item')) {
                 element.querySelector('span:last-child').textContent = text;
             } else if (element.id === 'submit-answer-button') {
@@ -487,7 +574,33 @@ function setLanguage(language) {
     Object.entries(commonText).forEach(([selector, text]) => {
         document.querySelectorAll(selector).forEach((element) => { element.textContent = text; });
     });
+    const formText = state.language === 'ja'
+        ? {
+            '#answer-input': '場所名を入力（例：東京駅）', '#proposal-name': '例：犬山城',
+            '#proposal-answer': '例：犬山城、犬山', '#proposal-prefecture': '都道府県を選択',
+            '#proposal-name + input': '例：犬山城', '#prefecture-input': '都道府県を選択'
+        }
+        : {
+            '#answer-input': 'Enter a place name (e.g. Tokyo Station)', '#proposal-name': 'e.g. Inuyama Castle',
+            '#proposal-answer': 'e.g. Inuyama Castle, Inuyama', '#proposal-prefecture': 'Select a prefecture',
+            '#prefecture-input': 'Select prefecture'
+        };
+    Object.entries(formText).forEach(([selector, text]) => {
+        document.querySelectorAll(selector).forEach((element) => {
+            if (element.tagName === 'INPUT') element.placeholder = text;
+            if (element.tagName === 'SELECT' && element.options[0]) element.options[0].textContent = text;
+        });
+    });
+    updateSettingOptions();
+    if (state.round) updateHintText(state.round.target);
     renderProposals();
+}
+
+function updateSettingOptions() {
+    const questionLabels = state.language === 'ja' ? ['5問', '10問', '20問', '30問'] : ['5 questions', '10 questions', '20 questions', '30 questions'];
+    const timeLabels = state.language === 'ja' ? ['30秒', '60秒', '120秒', '無制限'] : ['30 seconds', '60 seconds', '120 seconds', 'Unlimited'];
+    Array.from(el.questionCountSetting.options).forEach((option, index) => { option.textContent = questionLabels[index]; });
+    Array.from(el.timeLimitSetting.options).forEach((option, index) => { option.textContent = timeLabels[index]; });
 }
 
 function languageText(english, japanese) {
@@ -499,7 +612,7 @@ function languageText(english, japanese) {
    5. 画面切り替え・サイドメニュー
    ================================================================ */
 
-const SCREENS = ['home', 'game', 'result', 'proposals', 'settings', 'help'];
+const SCREENS = ['home', 'game', 'result', 'proposals', 'help'];
 
 function showScreen(name) {
     SCREENS.forEach((screenName) => {
@@ -570,7 +683,8 @@ function loadSettings() {
     }
 
     el.questionCountSetting.value = String(state.settings.questionCount);
-    el.timeLimitSetting.value = String(state.settings.timeLimit);
+    state.settings.timeLimit = 120;
+    el.timeLimitSetting.value = '120';
     el.animationSetting.checked = state.settings.animations;
     el.soundSetting.checked = state.settings.sound;
 
@@ -609,7 +723,7 @@ function addProposal(event) {
     saveProposals();
     el.proposalForm.reset();
     renderProposals();
-    showNotification('Question added.', 'success');
+    showNotification(languageText('Question added.', '問題を追加しました。'), 'success');
 }
 
 function renderProposals() {
@@ -649,7 +763,7 @@ function saveSettingsFromForm() {
     localStorage.setItem('jlg-settings', JSON.stringify(state.settings));
 
     applyAnimationSetting();
-    showNotification('Settings saved.', 'success');
+    showNotification(languageText('Settings saved.', '設定を保存しました。'), 'success');
 }
 
 function applyAnimationSetting() {
@@ -665,7 +779,7 @@ function startGame(mode) {
     const questionCount = mode === 'challenge'
         ? 7
         : Math.min(Math.max(state.settings.questionCount, 1), 30);
-    const timeLimit = state.settings.timeLimit;
+    const timeLimit = 120;
 
     state.session = {
         mode,
@@ -696,14 +810,14 @@ function startProposal(proposal) {
         pool: [proposal],
         index: -1,
         total: 1,
-        timeLimit: state.settings.timeLimit,
+        timeLimit: 120,
         totalScore: 0,
         results: [],
         startedAt: Date.now(),
         finished: false
     };
     document.body.classList.add('game-active');
-    el.gameModeLabel.textContent = 'COMMUNITY QUESTION';
+    el.gameModeLabel.textContent = languageText('COMMUNITY QUESTION', 'みんなの問題');
     updateScoreDisplay();
     showScreen('game');
     nextRound();
@@ -745,8 +859,8 @@ function nextRound() {
     };
 
     el.questionNumber.textContent = languageText(`Question ${session.index + 1}`, `第${session.index + 1}問`);
-    el.questionTotal.textContent = `/ ${session.total}`;
-    el.roundValue.textContent = `${session.index + 1} / ${session.total}`;
+    el.questionTotal.textContent = state.language === 'ja' ? `/ ${session.total}` : `/ ${session.total}`;
+    el.roundValue.textContent = state.language === 'ja' ? `${session.index + 1} / ${session.total}` : `${session.index + 1} / ${session.total}`;
 
     resetAnswerInput();
     loadPhoto(target);
@@ -777,7 +891,7 @@ function finishGame() {
         ? languageText('Share 7-question score', '7問のスコアを共有')
         : languageText('Share score', 'スコアを共有');
     el.resultCorrect.textContent = `${correctCount} / ${results.length}`;
-    el.resultAverageDistance.textContent = 'Text judged';
+    el.resultAverageDistance.textContent = languageText('Text judged', '文字入力で判定');
     el.resultBestScore.textContent = String(bestScore);
     el.resultTime.textContent = formatDuration(elapsedMs);
 
@@ -796,9 +910,9 @@ function renderResultItems(results) {
             <span class="result-item-number">${index + 1}</span>
             <div class="result-item-location">
                 <strong>${escapeHtml(r.target.name)} (${escapeHtml(r.target.pref)})</strong>
-                <span>${r.skipped ? 'Skipped' : r.answer ? (r.correct ? 'Correct' : 'Incorrect') : 'No answer'}</span>
+                    <span>${r.skipped ? languageText('Skipped', 'スキップ') : r.answer ? (r.correct ? languageText('Correct', '正解') : languageText('Incorrect', '不正解')) : languageText('No answer', '未回答')}</span>
             </div>
-            <span class="result-item-score">${r.score} pt</span>
+                <span class="result-item-score">${r.score} ${languageText('pt', '点')}</span>
         `;
 
         el.resultItems.appendChild(item);
@@ -861,16 +975,16 @@ function loadPhoto(target) {
     state.photoMap.setView([target.lat, target.lng], 15, { animate: false });
     setTimeout(() => state.photoMap.invalidateSize(), 50);
 
-    el.photoSourceLabel.textContent = 'SATELLITE VIEW';
-    el.photoCaption.textContent = 'Guess the location from the image.';
-    el.photoMetaResolution.textContent = 'Zoom 15';
-    el.photoMetaType.textContent = 'Aerial';
+    el.photoSourceLabel.textContent = languageText('SATELLITE VIEW', '衛星画像');
+    el.photoCaption.textContent = languageText('Guess the location from the image.', '画像から場所を推理してください。');
+    el.photoMetaResolution.textContent = languageText('Zoom 15', 'ズーム 15');
+    el.photoMetaType.textContent = languageText('Aerial', '航空写真');
 }
 
 function toggleFullscreenPhoto() {
     if (!document.fullscreenElement) {
         el.photoContainer.requestFullscreen?.().catch(() => {
-            showNotification('Fullscreen is not supported.', 'error');
+            showNotification(languageText('Fullscreen is not supported.', '全画面表示には対応していません。'), 'error');
         });
     } else {
         document.exitFullscreen?.();
@@ -940,7 +1054,7 @@ function submitAnswer() {
 
 function handleTimeUp() {
     if (!state.round || state.round.submitted) return;
-    showNotification('Time is up.', 'error');
+    showNotification(languageText('Time is up.', '時間切れです。'), 'error');
     completeRound(null, null, false);
 }
 
@@ -957,12 +1071,14 @@ function completeRound(prefecture, answer, skipped) {
 
     round.submitted = true;
 
-    const isCorrect = prefecture === target.pref && isAnswerCorrect(answer, target);
+    const prefectureCorrect = prefecture === target.pref;
+    const nameCorrect = isAnswerCorrect(answer, target);
+    const isCorrect = prefectureCorrect && nameCorrect;
     const distanceKm = isCorrect ? 0 : null;
-    const score = isCorrect ? 5000 : 0;
+    const score = (prefectureCorrect ? 2500 : 0) + (nameCorrect ? 2500 : 0);
 
     state.session.totalScore += score;
-    state.session.results.push({ target, prefecture, answer, distanceKm, score, correct: isCorrect, skipped });
+    state.session.results.push({ target, prefecture, answer, distanceKm, score, correct: isCorrect, prefectureCorrect, nameCorrect, skipped });
 
     updateScoreDisplay();
     showAnswerResult(target, prefecture, answer, distanceKm, score, isCorrect, skipped);
@@ -1008,7 +1124,7 @@ function toRad(deg) {
 
 function showAnswerResult(target, prefecture, answer, distanceKm, score, isCorrect, skipped) {
     el.answerScore.textContent = String(score);
-    el.resultStatusLabel.textContent = skipped ? 'SKIPPED' : isCorrect ? 'CORRECT' : 'INCORRECT';
+    el.resultStatusLabel.textContent = skipped ? languageText('SKIPPED', 'スキップ') : isCorrect ? languageText('CORRECT', '正解') : languageText('INCORRECT', '不正解');
     el.correctLocationName.textContent = `${target.name}（${target.pref}）`;
     el.answerDistance.textContent = skipped ? languageText('Skipped', 'スキップ') : answer ? (isCorrect ? languageText('Correct', '正解') : languageText('Incorrect', '不正解')) : languageText('No answer', '未回答');
     el.playerLocationName.textContent = skipped ? languageText('Skipped', 'スキップ') : prefecture && answer
@@ -1115,7 +1231,9 @@ function stopTimer() {
 
 function updateHintText(target) {
     const type = getLocationType(target);
-    const hint = `This is ${type}. It is in ${target.region} (${target.pref}).`;
+    const hint = state.language === 'ja'
+        ? `これは${type}です。`
+        : `This is ${type}.`;
     el.hintText.textContent = hint;
     el.hintModalText.textContent = hint;
 }
@@ -1123,15 +1241,16 @@ function updateHintText(target) {
 function getLocationType(target) {
     const name = target.name;
 
-    if (name.includes('空港')) return 'an airport or runway';
-    if (name.includes('ジャンクション')) return 'a highway junction';
-    if (name.includes('インターチェンジ')) return 'an interchange';
-    if (name.endsWith('駅')) return 'a train station';
-    if (name.includes('城')) return 'a castle';
-    if (/寺|神社|神宮|大社|宮|堂/.test(name)) return 'a temple or historic landmark';
-    if (name.includes('島')) return 'an island';
-    if (/山|湖|沼|砂丘|峡|湾|浜|松原|高原|温泉|渦潮/.test(name)) return 'a natural landmark';
-    return 'a landmark';
+    const type = name.includes('空港') ? ['an airport or runway', '空港や滑走路']
+        : name.includes('ジャンクション') ? ['a highway junction', '高速道路のジャンクション']
+            : name.includes('インターチェンジ') ? ['an interchange', 'インターチェンジ']
+                : name.endsWith('駅') ? ['a train station', '駅']
+                    : name.includes('城') ? ['a castle', '城']
+                        : /寺|神社|神宮|大社|宮|堂/.test(name) ? ['a temple or historic landmark', '寺院や歴史的な名所']
+                            : name.includes('島') ? ['an island', '島']
+                                : /山|湖|沼|砂丘|峡|湾|浜|松原|高原|温泉|渦潮/.test(name) ? ['a natural landmark', '自然の名所']
+                                    : ['a landmark', '名所'];
+    return languageText(type[0], type[1]);
 }
 
 function openModal(modal) {
@@ -1262,16 +1381,14 @@ function bindEvents() {
         if (state.session && state.session.results.length) {
             showScreen('result');
         } else {
-            showNotification('There are no results yet.', 'error');
+            showNotification(languageText('There are no results yet.', 'まだ結果がありません。'), 'error');
             closeSideMenu();
         }
     });
     el.menuProposals.addEventListener('click', () => showScreen('proposals'));
-    el.menuSettings.addEventListener('click', () => showScreen('settings'));
     el.menuHelp.addEventListener('click', () => showScreen('help'));
 
     el.footerHelpButton.addEventListener('click', () => showScreen('help'));
-    el.footerSettingsButton.addEventListener('click', () => showScreen('settings'));
 
     /* ホーム画面 */
     el.startChallengeButton.addEventListener('click', () => startGame('challenge'));
