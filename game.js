@@ -489,6 +489,7 @@ const state = {
 
     proposals: [],
     friends: [],
+    playerId: localStorage.getItem('jlg-player-id') || `PLAYER-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
     mapSuggestions: [],
     placeSuggestions: [],
 
@@ -514,6 +515,8 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     loadProposals();
     loadSuggestionLists();
+    localStorage.setItem('jlg-player-id', state.playerId);
+    el.playerId.textContent = state.playerId;
     bindEvents();
     setLanguage(state.language);
     el.gameInfo.after(el.hintPanel);
@@ -555,7 +558,7 @@ function cacheElements() {
 
         'proposal-form', 'proposal-name', 'proposal-prefecture', 'proposal-answer',
         'proposal-latitude', 'proposal-longitude', 'proposal-grid', 'proposal-count',
-        'friend-form', 'friend-name', 'friend-list', 'new-map-form', 'new-map-name', 'new-map-description', 'new-map-list',
+        'friend-form', 'friend-name', 'friend-message', 'friend-search', 'friend-count', 'friend-list', 'player-id', 'copy-player-id', 'new-map-form', 'new-map-name', 'new-map-description', 'new-map-list',
         'new-place-form', 'new-place-name', 'new-place-region', 'new-place-list',
 
         'question-count-setting', 'time-limit-setting', 'animation-setting', 'sound-setting', 'save-settings-button',
@@ -640,6 +643,10 @@ const UI_TRANSLATIONS = {
     en: {
         '#menu-button': 'Open menu', '#close-menu-button': 'Close menu', '#menu-home': 'Home',
         '#menu-practice': 'Practice mode',
+        '#friends-screen h1': 'Friends', '#friends-screen .proposals-header p': 'Add friends by player name.',
+        '.friend-profile h2': 'My player ID', '#copy-player-id': 'Copy ID',
+        '#friend-form h2': 'Add a friend', '#friend-form label:nth-child(1)': 'Player name', '#friend-form label:nth-child(2)': 'Message (optional)',
+        '#friend-form button': 'Send friend request', '#friends-screen .proposal-list-heading h2': 'My friends', '#friend-search': 'Search friends',
         '#menu-japan': 'Japan', '#menu-world': 'World', '#menu-results': 'Results', '#menu-proposals': 'Community questions', '#menu-settings': 'Settings',
         '#menu-practice-japan': 'Japan', '#menu-practice-world': 'World', '.menu-section-label': 'Practice mode',
         '#start-challenge-button .mode-card-title': 'JAPAN', '#start-practice-button .mode-card-title': 'WORLD',
@@ -703,6 +710,10 @@ const UI_TRANSLATIONS = {
     ja: {
         '#menu-button': 'メニューを開く', '#close-menu-button': 'メニューを閉じる', '#menu-home': 'ホーム',
         '#menu-practice': '練習モード',
+        '#friends-screen h1': 'フレンド', '#friends-screen .proposals-header p': 'プレイヤー名でフレンドを追加します。',
+        '.friend-profile h2': '自分のプレイヤーID', '#copy-player-id': 'IDをコピー',
+        '#friend-form h2': 'フレンドを追加', '#friend-form label:nth-child(1)': 'プレイヤー名', '#friend-form label:nth-child(2)': 'メッセージ（任意）',
+        '#friend-form button': 'フレンド申請を送る', '#friends-screen .proposal-list-heading h2': 'フレンド一覧', '#friend-search': 'フレンドを検索',
         '#menu-japan': '日本', '#menu-world': '世界', '#menu-results': '結果', '#menu-proposals': 'みんなの問題', '#menu-settings': '設定', '#menu-help': '遊び方',
         '#menu-practice-japan': '日本', '#menu-practice-world': 'ワールド', '.menu-section-label': '練習モード',
         '#start-challenge-button .mode-card-title': '日本', '#start-practice-button .mode-card-title': 'ワールド',
@@ -813,12 +824,12 @@ function setLanguage(language) {
     });
     const formText = state.language === 'ja'
         ? {
-            '#answer-input': state.gameType === 'world' ? '場所名を入力（例：エッフェル塔）' : '場所名を入力（例：東京駅）', '#proposal-name': '例：犬山城',
+            '#answer-input': state.gameType === 'world' ? '場所名を入力（例：エッフェル塔）' : '場所名を入力（例：東京駅）', '#friend-search': 'フレンドを検索', '#friend-message': 'あいさつを入力', '#proposal-name': '例：犬山城',
             '#proposal-answer': '例：犬山城、犬山', '#proposal-prefecture': '都道府県を選択',
             '#proposal-name + input': '例：犬山城', '#prefecture-input': '都道府県を選択'
         }
         : {
-            '#answer-input': state.gameType === 'world' ? 'Enter a place name (e.g. Eiffel Tower)' : 'Enter a place name (e.g. Tokyo Station)', '#proposal-name': 'e.g. Inuyama Castle',
+            '#answer-input': state.gameType === 'world' ? 'Enter a place name (e.g. Eiffel Tower)' : 'Enter a place name (e.g. Tokyo Station)', '#friend-search': 'Search friends', '#friend-message': 'Say hello', '#proposal-name': 'e.g. Inuyama Castle',
             '#proposal-answer': 'e.g. Inuyama Castle, Inuyama', '#proposal-prefecture': 'Select a prefecture',
             '#prefecture-input': 'Select prefecture'
         };
@@ -833,6 +844,7 @@ function setLanguage(language) {
     updateModeUI();
     if (state.round) updateHintText(state.round.target);
     renderProposals();
+    renderFriends();
 }
 
 function updateSettingOptions() {
@@ -1009,10 +1021,10 @@ function addFriend(event) {
     event.preventDefault();
     const name = el.friendName.value.trim();
     if (!name) return;
-    state.friends.unshift({ name, addedAt: Date.now() });
+    state.friends.unshift({ name, message: el.friendMessage.value.trim(), status: 'pending', addedAt: Date.now() });
     localStorage.setItem('jlg-friends', JSON.stringify(state.friends));
     el.friendForm.reset();
-    renderSimpleSuggestions(el.friendList, state.friends, (friend) => friend.name);
+    renderFriends();
     showNotification(languageText('Friend request sent.', 'フレンド申請を送りました。'), 'success');
 }
 
@@ -1059,6 +1071,34 @@ function renderSimpleSuggestions(container, items, formatItem) {
     });
 }
 
+function renderFriends() {
+    const query = el.friendSearch.value.trim().toLowerCase();
+    const visibleFriends = state.friends.filter((friend) => friend.name.toLowerCase().includes(query));
+    el.friendCount.textContent = languageText(`${state.friends.length} friend${state.friends.length === 1 ? '' : 's'}`, `${state.friends.length}人`);
+    el.friendList.innerHTML = '';
+    visibleFriends.forEach((friend) => {
+        const card = document.createElement('article');
+        card.className = 'proposal-card friend-card';
+        const details = document.createElement('div');
+        const name = document.createElement('h3');
+        name.textContent = friend.name;
+        const status = document.createElement('p');
+        status.textContent = `${languageText('Request pending', '申請中')} · ${friend.message || languageText('No message', 'メッセージなし')}`;
+        details.append(name, status);
+        const removeButton = document.createElement('button');
+        removeButton.className = 'secondary-button';
+        removeButton.type = 'button';
+        removeButton.textContent = languageText('Remove', '削除');
+        removeButton.addEventListener('click', () => {
+            state.friends = state.friends.filter((item) => item !== friend);
+            localStorage.setItem('jlg-friends', JSON.stringify(state.friends));
+            renderFriends();
+        });
+        card.append(details, removeButton);
+        el.friendList.appendChild(card);
+    });
+}
+
 function loadSuggestionLists() {
     try {
         state.friends = JSON.parse(localStorage.getItem('jlg-friends') || '[]');
@@ -1069,7 +1109,7 @@ function loadSuggestionLists() {
         state.mapSuggestions = [];
         state.placeSuggestions = [];
     }
-    renderSimpleSuggestions(el.friendList, state.friends, (friend) => friend.name);
+    renderFriends();
     renderSimpleSuggestions(el.newMapList, state.mapSuggestions, (item) => `${item.name} - ${item.description}`);
     renderSimpleSuggestions(el.newPlaceList, state.placeSuggestions, (item) => `${item.name} - ${item.region}`);
 }
@@ -1778,6 +1818,15 @@ function bindEvents() {
     el.friendForm.addEventListener('submit', addFriend);
     el.newMapForm.addEventListener('submit', addMapSuggestion);
     el.newPlaceForm.addEventListener('submit', addPlaceSuggestion);
+    el.friendSearch.addEventListener('input', renderFriends);
+    el.copyPlayerId.addEventListener('click', async () => {
+        try {
+            await navigator.clipboard.writeText(state.playerId);
+            showNotification(languageText('Player ID copied.', 'プレイヤーIDをコピーしました。'), 'success');
+        } catch (error) {
+            showNotification(languageText('Could not copy the ID.', 'IDをコピーできませんでした。'), 'error');
+        }
+    });
 
     /* ゲーム画面 */
     el.photoFullscreenButton.addEventListener('click', toggleFullscreenPhoto);

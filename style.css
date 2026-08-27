@@ -432,6 +432,43 @@ a {
     padding-left: 28px;
 }
 
+.friend-search {
+    width: 100%;
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface-2);
+    color: var(--text);
+}
+
+.friend-profile-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.friend-profile-row strong {
+    color: var(--primary-hover);
+    font-size: 18px;
+    letter-spacing: 0.08em;
+}
+
+.friend-card {
+    align-items: center;
+}
+
+.friend-card h3,
+.friend-card p {
+    margin: 0;
+}
+
+.friend-card p {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
 .side-menu-footer {
     margin-top: auto;
     padding-top: 18px;

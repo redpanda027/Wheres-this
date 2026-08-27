@@ -812,6 +812,15 @@
                         <h1>Friends</h1>
                         <p>Add a friend by their player name.</p>
                     </div>
+                    <div class="friend-profile proposal-form">
+                        <div class="proposal-form-heading">
+                            <h2>My player ID</h2>
+                        </div>
+                        <div class="friend-profile-row">
+                            <strong id="player-id">----</strong>
+                            <button id="copy-player-id" class="secondary-button" type="button">Copy ID</button>
+                        </div>
+                    </div>
                     <form id="friend-form" class="proposal-form">
                         <div class="proposal-form-heading">
                             <h2>Add a friend</h2>
@@ -821,9 +830,18 @@
                                 Player name
                                 <input id="friend-name" type="text" maxlength="30" placeholder="e.g. Alex" required>
                             </label>
+                            <label>
+                                Message (optional)
+                                <input id="friend-message" type="text" maxlength="80" placeholder="Say hello">
+                            </label>
                         </div>
                         <button class="primary-button" type="submit">Send friend request <span>→</span></button>
                     </form>
+                    <div class="proposal-list-heading">
+                        <h2>My friends</h2>
+                        <span id="friend-count">0 friends</span>
+                    </div>
+                    <input id="friend-search" class="friend-search" type="search" placeholder="Search friends">
                     <div id="friend-list" class="proposal-grid"></div>
                 </div>
             </section>
