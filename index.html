@@ -160,6 +160,30 @@
                     <span>Practice mode</span>
                 </button>
 
+                <button
+                    id="menu-friends"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">👥</span>
+                    <span>Friends</span>
+                </button>
+
+                <button
+                    id="menu-new-map"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">🗺</span>
+                    <span>Suggest a new map</span>
+                </button>
+
+                <button
+                    id="menu-new-place"
+                    class="menu-item"
+                    type="button">
+                    <span class="menu-item-icon">📍</span>
+                    <span>Suggest a new place</span>
+                </button>
+
             </nav>
 
             <div class="side-menu-footer">
@@ -777,6 +801,78 @@
                         <span id="proposal-count">0 questions</span>
                     </div>
                     <div id="proposal-grid" class="proposal-grid"></div>
+                </div>
+            </section>
+
+
+            <section id="friends-screen" class="screen" aria-label="Friends screen" hidden>
+                <div class="proposals-container">
+                    <div class="proposals-header">
+                        <span class="panel-kicker">FRIENDS</span>
+                        <h1>Friends</h1>
+                        <p>Add a friend by their player name.</p>
+                    </div>
+                    <form id="friend-form" class="proposal-form">
+                        <div class="proposal-form-heading">
+                            <h2>Add a friend</h2>
+                        </div>
+                        <div class="proposal-fields">
+                            <label>
+                                Player name
+                                <input id="friend-name" type="text" maxlength="30" placeholder="e.g. Alex" required>
+                            </label>
+                        </div>
+                        <button class="primary-button" type="submit">Send friend request <span>→</span></button>
+                    </form>
+                    <div id="friend-list" class="proposal-grid"></div>
+                </div>
+            </section>
+
+            <section id="new-map-screen" class="screen" aria-label="New map suggestion screen" hidden>
+                <div class="proposals-container">
+                    <div class="proposals-header">
+                        <span class="panel-kicker">NEW MAP</span>
+                        <h1>Suggest a new map</h1>
+                        <p>Tell us about a map theme you would like to play.</p>
+                    </div>
+                    <form id="new-map-form" class="proposal-form">
+                        <div class="proposal-fields">
+                            <label>
+                                Map name
+                                <input id="new-map-name" type="text" maxlength="50" placeholder="e.g. World Capitals" required>
+                            </label>
+                            <label>
+                                Description
+                                <input id="new-map-description" type="text" maxlength="120" placeholder="e.g. Famous city centers" required>
+                            </label>
+                        </div>
+                        <button class="primary-button" type="submit">Submit map suggestion <span>→</span></button>
+                    </form>
+                    <div id="new-map-list" class="proposal-grid"></div>
+                </div>
+            </section>
+
+            <section id="new-place-screen" class="screen" aria-label="New place suggestion screen" hidden>
+                <div class="proposals-container">
+                    <div class="proposals-header">
+                        <span class="panel-kicker">NEW PLACE</span>
+                        <h1>Suggest a new place</h1>
+                        <p>Add a landmark to the community question list.</p>
+                    </div>
+                    <form id="new-place-form" class="proposal-form">
+                        <div class="proposal-fields">
+                            <label>
+                                Place name
+                                <input id="new-place-name" type="text" maxlength="50" placeholder="e.g. Shibuya Crossing" required>
+                            </label>
+                            <label>
+                                Country or prefecture
+                                <input id="new-place-region" type="text" maxlength="40" placeholder="e.g. Tokyo" required>
+                            </label>
+                        </div>
+                        <button class="primary-button" type="submit">Submit place suggestion <span>→</span></button>
+                    </form>
+                    <div id="new-place-list" class="proposal-grid"></div>
                 </div>
             </section>
 

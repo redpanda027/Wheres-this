@@ -314,7 +314,25 @@ const PREFECTURES = [
   '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県',
   '沖縄県',
 ];
+const PREFECTURE_GROUPS = [
+        { label: ['Hokkaido', '北海道'], prefectures: ['北海道'] },
+        { label: ['Tohoku', '東北地方'], prefectures: ['青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県'] },
+        { label: ['Kanto', '関東地方'], prefectures: ['茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県'] },
+        { label: ['Chubu', '中部地方'], prefectures: ['新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県'] },
+        { label: ['Kinki', '近畿地方'], prefectures: ['三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県'] },
+        { label: ['Chugoku', '中国地方'], prefectures: ['鳥取県', '島根県', '岡山県', '広島県', '山口県'] },
+        { label: ['Shikoku', '四国地方'], prefectures: ['徳島県', '香川県', '愛媛県', '高知県'] },
+        { label: ['Kyushu / Okinawa', '九州・沖縄地方'], prefectures: ['福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'] }
+];
 const COUNTRIES = [...new Set(WORLD_LOCATIONS.map((location) => location.pref))];
+const WORLD_COUNTRY_GROUPS = [
+    { key: 'Europe', label: ['Europe', 'ヨーロッパ'] },
+    { key: 'North America', label: ['North America', '北アメリカ'] },
+    { key: 'South America', label: ['South America', '南アメリカ'] },
+    { key: 'Asia', label: ['Asia', 'アジア'] },
+    { key: 'Africa', label: ['Africa', 'アフリカ'] },
+    { key: 'Oceania', label: ['Oceania', 'オセアニア'] }
+];
 const WORLD_JAPANESE_COUNTRIES = {
     France: 'フランス', Italy: 'イタリア', 'United Kingdom': 'イギリス', Spain: 'スペイン', Greece: 'ギリシャ',
     'United States': 'アメリカ合衆国', Mexico: 'メキシコ', Brazil: 'ブラジル', Peru: 'ペルー', India: 'インド',
@@ -405,6 +423,9 @@ const state = {
     timerId: null,
 
     proposals: [],
+    friends: [],
+    mapSuggestions: [],
+    placeSuggestions: [],
 
     photoMap: null,
     photoTileLayer: null,
@@ -427,6 +448,7 @@ document.addEventListener('DOMContentLoaded', () => {
     populatePrefectureOptions();
     loadSettings();
     loadProposals();
+    loadSuggestionLists();
     bindEvents();
     setLanguage(state.language);
     el.gameInfo.after(el.hintPanel);
@@ -444,10 +466,11 @@ document.addEventListener('DOMContentLoaded', () => {
 function cacheElements() {
     const ids = [
         'menu-button', 'logo', 'side-menu', 'close-menu-button', 'menu-overlay',
-        'menu-home', 'menu-practice',
+        'menu-home', 'menu-practice', 'menu-friends', 'menu-new-map', 'menu-new-place',
         'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer', 'language-select',
 
         'game-screen', 'game-info', 'hint-panel', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
+        'friends-screen', 'new-map-screen', 'new-place-screen',
         'game-mode-label', 'game-title', 'round-value',
 
         'photo-fullscreen-button', 'photo-container', 'photo-placeholder', 'location-photo',
@@ -467,6 +490,8 @@ function cacheElements() {
 
         'proposal-form', 'proposal-name', 'proposal-prefecture', 'proposal-answer',
         'proposal-latitude', 'proposal-longitude', 'proposal-grid', 'proposal-count',
+        'friend-form', 'friend-name', 'friend-list', 'new-map-form', 'new-map-name', 'new-map-description', 'new-map-list',
+        'new-place-form', 'new-place-name', 'new-place-region', 'new-place-list',
 
         'question-count-setting', 'time-limit-setting', 'animation-setting', 'sound-setting', 'save-settings-button',
 
@@ -501,17 +526,44 @@ function populatePrefectureOptions() {
 }
 
 function updateLocationOptions() {
-    const options = state.gameType === 'world' ? COUNTRIES : PREFECTURES;
     const label = state.gameType === 'world'
         ? languageText('Select country', '国を選択')
         : languageText('Select prefecture', '都道府県を選択');
     el.prefectureInput.setAttribute('aria-label', label);
     el.prefectureInput.innerHTML = `<option value="">${label}</option>`;
-    options.forEach((optionValue) => {
-        const option = document.createElement('option');
-        option.value = optionValue;
-        option.textContent = displayCountryName(optionValue);
-        el.prefectureInput.appendChild(option);
+
+    if (state.gameType === 'world') {
+        WORLD_COUNTRY_GROUPS.forEach((group) => {
+            const groupCountries = [...new Set(
+                WORLD_LOCATIONS
+                    .filter((location) => location.region === group.key)
+                    .map((location) => location.pref)
+            )].sort((first, second) => displayCountryName(first).localeCompare(displayCountryName(second), state.language));
+            if (!groupCountries.length) return;
+
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = languageText(...group.label);
+            groupCountries.forEach((optionValue) => {
+                const option = document.createElement('option');
+                option.value = optionValue;
+                option.textContent = displayCountryName(optionValue);
+                optgroup.appendChild(option);
+            });
+            el.prefectureInput.appendChild(optgroup);
+        });
+        return;
+    }
+
+    PREFECTURE_GROUPS.forEach((group) => {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = languageText(...group.label);
+        group.prefectures.forEach((optionValue) => {
+            const option = document.createElement('option');
+            option.value = optionValue;
+            option.textContent = optionValue;
+            optgroup.appendChild(option);
+        });
+        el.prefectureInput.appendChild(optgroup);
     });
 }
 
@@ -795,7 +847,7 @@ function startPracticeGame(gameType) {
    5. 画面切り替え・サイドメニュー
    ================================================================ */
 
-const SCREENS = ['home', 'game', 'result', 'proposals', 'help'];
+const SCREENS = ['home', 'game', 'result', 'proposals', 'friends', 'new-map', 'new-place', 'help'];
 
 function showScreen(name) {
     SCREENS.forEach((screenName) => {
@@ -886,6 +938,75 @@ function loadProposals() {
 
 function saveProposals() {
     localStorage.setItem('jlg-proposals', JSON.stringify(state.proposals));
+}
+
+function addFriend(event) {
+    event.preventDefault();
+    const name = el.friendName.value.trim();
+    if (!name) return;
+    state.friends.unshift({ name, addedAt: Date.now() });
+    localStorage.setItem('jlg-friends', JSON.stringify(state.friends));
+    el.friendForm.reset();
+    renderSimpleSuggestions(el.friendList, state.friends, (friend) => friend.name);
+    showNotification(languageText('Friend request sent.', 'フレンド申請を送りました。'), 'success');
+}
+
+function addMapSuggestion(event) {
+    event.preventDefault();
+    const suggestion = {
+        name: el.newMapName.value.trim(),
+        description: el.newMapDescription.value.trim()
+    };
+    if (!suggestion.name || !suggestion.description) return;
+    state.mapSuggestions.unshift(suggestion);
+    localStorage.setItem('jlg-map-suggestions', JSON.stringify(state.mapSuggestions));
+    el.newMapForm.reset();
+    renderSimpleSuggestions(el.newMapList, state.mapSuggestions, (item) => `${item.name} - ${item.description}`);
+    showNotification(languageText('Map suggestion submitted.', '新しいマップの提案を送りました。'), 'success');
+}
+
+function addPlaceSuggestion(event) {
+    event.preventDefault();
+    const suggestion = {
+        name: el.newPlaceName.value.trim(),
+        region: el.newPlaceRegion.value.trim()
+    };
+    if (!suggestion.name || !suggestion.region) return;
+    state.placeSuggestions.unshift(suggestion);
+    localStorage.setItem('jlg-place-suggestions', JSON.stringify(state.placeSuggestions));
+    el.newPlaceForm.reset();
+    renderSimpleSuggestions(el.newPlaceList, state.placeSuggestions, (item) => `${item.name} - ${item.region}`);
+    showNotification(languageText('Place suggestion submitted.', '新しい場所の提案を送りました。'), 'success');
+}
+
+function renderSimpleSuggestions(container, items, formatItem) {
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+        const card = document.createElement('article');
+        card.className = 'proposal-card';
+        const number = document.createElement('span');
+        number.className = 'proposal-card-number';
+        number.textContent = String(index + 1);
+        const text = document.createElement('p');
+        text.textContent = formatItem(item);
+        card.append(number, text);
+        container.appendChild(card);
+    });
+}
+
+function loadSuggestionLists() {
+    try {
+        state.friends = JSON.parse(localStorage.getItem('jlg-friends') || '[]');
+        state.mapSuggestions = JSON.parse(localStorage.getItem('jlg-map-suggestions') || '[]');
+        state.placeSuggestions = JSON.parse(localStorage.getItem('jlg-place-suggestions') || '[]');
+    } catch (error) {
+        state.friends = [];
+        state.mapSuggestions = [];
+        state.placeSuggestions = [];
+    }
+    renderSimpleSuggestions(el.friendList, state.friends, (friend) => friend.name);
+    renderSimpleSuggestions(el.newMapList, state.mapSuggestions, (item) => `${item.name} - ${item.description}`);
+    renderSimpleSuggestions(el.newPlaceList, state.placeSuggestions, (item) => `${item.name} - ${item.region}`);
 }
 
 function addProposal(event) {
@@ -1116,13 +1237,13 @@ function ensurePhotoMap() {
     el.photoContainer.insertBefore(mapDiv, el.photoContainer.firstChild);
 
     state.photoMap = L.map(mapDiv, {
-        zoomControl: false,
+        zoomControl: true,
         dragging: false,
-        scrollWheelZoom: false,
-        doubleClickZoom: false,
+        scrollWheelZoom: true,
+        doubleClickZoom: true,
         boxZoom: false,
         keyboard: false,
-        touchZoom: false,
+        touchZoom: true,
         attributionControl: true
     });
 
@@ -1179,7 +1300,7 @@ function toggleFullscreenPhoto() {
 
 function initAnswerMap() {
     state.answerMap = L.map(el.map, {
-        zoomControl: false,
+        zoomControl: true,
         minZoom: 5,
         maxZoom: 14
     }).setView(state.gameType === 'world' ? WORLD_CENTER : JAPAN_CENTER, state.gameType === 'world' ? WORLD_DEFAULT_ZOOM : JAPAN_DEFAULT_ZOOM);
@@ -1565,6 +1686,9 @@ function bindEvents() {
         state.homeGameMode = 'practice';
         showScreen('home');
     });
+    el.menuFriends.addEventListener('click', () => showScreen('friends'));
+    el.menuNewMap.addEventListener('click', () => showScreen('new-map'));
+    el.menuNewPlace.addEventListener('click', () => showScreen('new-place'));
     el.footerHelpButton.addEventListener('click', () => showScreen('help'));
 
     /* ホーム画面 */
@@ -1577,6 +1701,9 @@ function bindEvents() {
         startGame(state.homeGameMode);
     });
     el.proposalForm.addEventListener('submit', addProposal);
+    el.friendForm.addEventListener('submit', addFriend);
+    el.newMapForm.addEventListener('submit', addMapSuggestion);
+    el.newPlaceForm.addEventListener('submit', addPlaceSuggestion);
 
     /* ゲーム画面 */
     el.photoFullscreenButton.addEventListener('click', toggleFullscreenPhoto);
