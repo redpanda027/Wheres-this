@@ -668,7 +668,11 @@ function updateModeUI() {
     const heroText = isWorld
         ? ['Find the place\nin the world.', '世界のどこかを\n見つけよう。']
         : ['Find the place\nin Japan.', '日本のどこかを\n見つけよう。'];
-    el.gameModeLabel.textContent = languageText(...modeText);
+    const sessionMode = state.session?.mode || state.homeGameMode;
+    const modeLabel = sessionMode === 'practice'
+        ? ['PRACTICE MODE', '練習モード']
+        : ['NORMAL MODE', '通常モード'];
+    el.gameModeLabel.textContent = `${languageText(...modeLabel)} · ${languageText(...modeText)}`;
     el.gameTitle.textContent = languageText(...titleText);
     document.querySelector('.home-hero .hero-kicker').textContent = languageText(
         isWorld ? 'WORLD LOCATION GAME' : 'JAPAN LOCATION GAME',
@@ -898,9 +902,6 @@ function startGame(mode) {
 
     document.body.classList.add('game-active');
 
-    el.gameModeLabel.textContent = mode === 'challenge'
-        ? languageText('NORMAL MODE', '通常モード')
-        : languageText('PRACTICE MODE', '練習モード');
     updateModeUI();
 
     updateScoreDisplay();
