@@ -249,7 +249,35 @@ const WORLD_LOCATIONS = [
     { name: 'Uluru', answers: ['Uluru', 'Ayers Rock'], pref: 'Australia', region: 'Oceania', lat: -25.3444, lng: 131.0369 },
     { name: 'Pyramids of Giza', answers: ['Pyramids of Giza', 'Giza Pyramids', 'Pyramids'], pref: 'Egypt', region: 'Africa', lat: 29.9792, lng: 31.1342 },
     { name: 'Table Mountain', answers: ['Table Mountain'], pref: 'South Africa', region: 'Africa', lat: -33.9628, lng: 18.4098 },
-    { name: 'Serengeti National Park', answers: ['Serengeti', 'Serengeti National Park'], pref: 'Tanzania', region: 'Africa', lat: -2.3333, lng: 34.8333 }
+    { name: 'Serengeti National Park', answers: ['Serengeti', 'Serengeti National Park'], pref: 'Tanzania', region: 'Africa', lat: -2.3333, lng: 34.8333 },
+    { name: 'Louvre Museum', answers: ['Louvre Museum', 'Louvre'], pref: 'France', region: 'Europe', lat: 48.8606, lng: 2.3376 },
+    { name: 'Leaning Tower of Pisa', answers: ['Leaning Tower of Pisa', 'Leaning Tower', 'Tower of Pisa'], pref: 'Italy', region: 'Europe', lat: 43.7230, lng: 10.3966 },
+    { name: 'Mount Fuji', answers: ['Mount Fuji', 'Fuji'], pref: 'Japan', region: 'Asia', lat: 35.3606, lng: 138.7274 },
+    { name: 'Hagia Sophia', answers: ['Hagia Sophia', 'Ayasofya'], pref: 'Turkey', region: 'Europe', lat: 41.0086, lng: 28.9802 },
+    { name: 'Neuschwanstein Castle', answers: ['Neuschwanstein Castle', 'Neuschwanstein'], pref: 'Germany', region: 'Europe', lat: 47.5576, lng: 10.7498 },
+    { name: 'Stonehenge', answers: ['Stonehenge'], pref: 'United Kingdom', region: 'Europe', lat: 51.1789, lng: -1.8262 },
+    { name: 'Mont Saint-Michel', answers: ['Mont Saint-Michel', 'Mont Saint Michel'], pref: 'France', region: 'Europe', lat: 48.6361, lng: -1.5115 },
+    { name: 'Red Square', answers: ['Red Square'], pref: 'Russia', region: 'Europe', lat: 55.7539, lng: 37.6208 },
+    { name: 'Niagara Falls', answers: ['Niagara Falls', 'Niagara'], pref: 'Canada', region: 'North America', lat: 43.0962, lng: -79.0377 },
+    { name: 'Walt Disney World', answers: ['Walt Disney World', 'Disney World'], pref: 'United States', region: 'North America', lat: 28.3852, lng: -81.5639 },
+    { name: 'Yellowstone National Park', answers: ['Yellowstone', 'Yellowstone National Park'], pref: 'United States', region: 'North America', lat: 44.4280, lng: -110.5885 },
+    { name: 'Havana Old Town', answers: ['Havana Old Town', 'Old Havana', 'Havana'], pref: 'Cuba', region: 'North America', lat: 23.1366, lng: -82.3531 },
+    { name: 'Easter Island Moai', answers: ['Easter Island', 'Moai', 'Easter Island Moai'], pref: 'Chile', region: 'South America', lat: -27.1127, lng: -109.3497 },
+    { name: 'Iguazu Falls', answers: ['Iguazu Falls', 'Iguassu Falls', 'Iguazu'], pref: 'Argentina', region: 'South America', lat: -25.6953, lng: -54.4367 },
+    { name: 'Bali Temple', answers: ['Bali Temple', 'Bali'], pref: 'Indonesia', region: 'Asia', lat: -8.3405, lng: 115.0920 },
+    { name: 'Marina Bay Sands', answers: ['Marina Bay Sands', 'Marina Bay'], pref: 'Singapore', region: 'Asia', lat: 1.2834, lng: 103.8607 },
+    { name: 'Borobudur Temple', answers: ['Borobudur', 'Borobudur Temple'], pref: 'Indonesia', region: 'Asia', lat: -7.6079, lng: 110.2038 },
+    { name: 'Mount Everest', answers: ['Mount Everest', 'Everest'], pref: 'Nepal', region: 'Asia', lat: 27.9881, lng: 86.9250 },
+    { name: 'Terracotta Army', answers: ['Terracotta Army', 'Terracotta Warriors'], pref: 'China', region: 'Asia', lat: 34.3841, lng: 109.2785 },
+    { name: 'Kinkaku-ji', answers: ['Kinkaku-ji', 'Golden Pavilion', 'Kinkakuji'], pref: 'Japan', region: 'Asia', lat: 35.0394, lng: 135.7292 },
+    { name: 'Lalibela Churches', answers: ['Lalibela', 'Lalibela Churches'], pref: 'Ethiopia', region: 'Africa', lat: 12.0317, lng: 39.0473 },
+    { name: 'Victoria Falls', answers: ['Victoria Falls'], pref: 'Zimbabwe', region: 'Africa', lat: -17.9243, lng: 25.8572 },
+    { name: 'Sphinx of Giza', answers: ['Sphinx', 'Great Sphinx', 'Sphinx of Giza'], pref: 'Egypt', region: 'Africa', lat: 29.9753, lng: 31.1376 },
+    { name: 'Marrakesh Medina', answers: ['Marrakesh Medina', 'Marrakesh', 'Marrakech'], pref: 'Morocco', region: 'Africa', lat: 31.6258, lng: -7.9892 },
+    { name: 'Avenue of Baobabs', answers: ['Avenue of Baobabs', 'Baobab Avenue'], pref: 'Madagascar', region: 'Africa', lat: -20.2500, lng: 44.4183 },
+    { name: 'Milford Sound', answers: ['Milford Sound'], pref: 'New Zealand', region: 'Oceania', lat: -44.6719, lng: 167.9250 },
+    { name: 'Great Barrier Reef', answers: ['Great Barrier Reef', 'Barrier Reef'], pref: 'Australia', region: 'Oceania', lat: -18.2871, lng: 147.6992 },
+    { name: 'Bora Bora', answers: ['Bora Bora'], pref: 'French Polynesia', region: 'Oceania', lat: -16.5004, lng: -151.7415 }
 ];
 
 const JAPAN_CENTER = [36.5, 138.0];
@@ -275,15 +303,59 @@ const UNSUITABLE_LOCATION_NAMES = new Set([
     '山寺立石寺', '錦帯橋公園', '大阪城公園', '熊本城公園'
 ]);
 const PREFECTURES = [
-    '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
-    '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
-    '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県',
-    '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県',
-    '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県',
-    '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県',
-    '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'
+  '北海道',
+  '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
+  '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
+  '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県',
+  '静岡県', '愛知県', '三重県',
+  '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+  '鳥取県', '島根県', '岡山県', '広島県', '山口県',
+  '徳島県', '香川県', '愛媛県', '高知県',
+  '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県',
+  '沖縄県',
 ];
 const COUNTRIES = [...new Set(WORLD_LOCATIONS.map((location) => location.pref))];
+const WORLD_JAPANESE_COUNTRIES = {
+    France: 'フランス', Italy: 'イタリア', 'United Kingdom': 'イギリス', Spain: 'スペイン', Greece: 'ギリシャ',
+    'United States': 'アメリカ合衆国', Mexico: 'メキシコ', Brazil: 'ブラジル', Peru: 'ペルー', India: 'インド',
+    Cambodia: 'カンボジア', 'United Arab Emirates': 'アラブ首長国連邦', China: '中国', Jordan: 'ヨルダン',
+    Australia: 'オーストラリア', Egypt: 'エジプト', 'South Africa': '南アフリカ', Tanzania: 'タンザニア',
+    Japan: '日本', Turkey: 'トルコ', Germany: 'ドイツ', Russia: 'ロシア', Canada: 'カナダ', Cuba: 'キューバ',
+    Chile: 'チリ', Argentina: 'アルゼンチン', Indonesia: 'インドネシア', Singapore: 'シンガポール', Nepal: 'ネパール',
+    Ethiopia: 'エチオピア', Zimbabwe: 'ジンバブエ', Morocco: 'モロッコ', Madagascar: 'マダガスカル',
+    'New Zealand': 'ニュージーランド', 'French Polynesia': 'フランス領ポリネシア'
+};
+const WORLD_JAPANESE_NAMES = {
+    'Eiffel Tower': 'エッフェル塔', Colosseum: 'コロッセオ', 'Big Ben': 'ビッグ・ベン', 'Sagrada Familia': 'サグラダ・ファミリア',
+    'Acropolis of Athens': 'アテネのアクロポリス', 'Statue of Liberty': '自由の女神', 'Golden Gate Bridge': 'ゴールデンゲートブリッジ',
+    'Chichen Itza': 'チチェン・イッツァ', 'Christ the Redeemer': 'コルコバードのキリスト像', 'Machu Picchu': 'マチュピチュ',
+    'Taj Mahal': 'タージ・マハル', 'Angkor Wat': 'アンコール・ワット', 'Burj Khalifa': 'ブルジュ・ハリファ',
+    'Great Wall of China': '万里の長城', Petra: 'ペトラ遺跡', 'Sydney Opera House': 'シドニー・オペラハウス',
+    Uluru: 'ウルル', 'Pyramids of Giza': 'ギザのピラミッド', 'Table Mountain': 'テーブルマウンテン',
+    'Serengeti National Park': 'セレンゲティ国立公園', 'Louvre Museum': 'ルーヴル美術館', 'Leaning Tower of Pisa': 'ピサの斜塔',
+    'Mount Fuji': '富士山', 'Hagia Sophia': 'アヤソフィア', 'Neuschwanstein Castle': 'ノイシュヴァンシュタイン城',
+    Stonehenge: 'ストーンヘンジ', 'Mont Saint-Michel': 'モン・サン＝ミシェル', 'Red Square': '赤の広場',
+    'Niagara Falls': 'ナイアガラの滝', 'Walt Disney World': 'ウォルト・ディズニー・ワールド',
+    'Yellowstone National Park': 'イエローストーン国立公園', 'Havana Old Town': 'ハバナ旧市街',
+    'Easter Island Moai': 'イースター島のモアイ像', 'Iguazu Falls': 'イグアスの滝', 'Bali Temple': 'バリ島の寺院',
+    'Marina Bay Sands': 'マリーナ・ベイ・サンズ', 'Borobudur Temple': 'ボロブドゥール寺院', 'Mount Everest': 'エベレスト',
+    'Terracotta Army': '兵馬俑', 'Kinkaku-ji': '金閣寺', 'Lalibela Churches': 'ラリベラの岩窟教会群',
+    'Victoria Falls': 'ビクトリアの滝', 'Sphinx of Giza': 'ギザの大スフィンクス', 'Marrakesh Medina': 'マラケシュ旧市街',
+    'Avenue of Baobabs': 'バオバブ街道', 'Milford Sound': 'ミルフォード・サウンド',
+    'Great Barrier Reef': 'グレート・バリア・リーフ', 'Bora Bora': 'ボラボラ島'
+};
+
+function displayLocationName(location) {
+    return state.language === 'ja' && state.gameType === 'world'
+        ? WORLD_JAPANESE_NAMES[location.name] || location.name
+        : location.name;
+}
+
+function displayCountryName(country) {
+    return state.language === 'ja' && state.gameType === 'world'
+        ? WORLD_JAPANESE_COUNTRIES[country] || country
+        : country;
+}
 
 
 /* ================================================================
@@ -438,7 +510,7 @@ function updateLocationOptions() {
     options.forEach((optionValue) => {
         const option = document.createElement('option');
         option.value = optionValue;
-        option.textContent = optionValue;
+        option.textContent = displayCountryName(optionValue);
         el.prefectureInput.appendChild(option);
     });
 }
@@ -624,12 +696,12 @@ function setLanguage(language) {
     });
     const formText = state.language === 'ja'
         ? {
-            '#answer-input': '場所名を入力（例：東京駅）', '#proposal-name': '例：犬山城',
+            '#answer-input': state.gameType === 'world' ? '場所名を入力（例：エッフェル塔）' : '場所名を入力（例：東京駅）', '#proposal-name': '例：犬山城',
             '#proposal-answer': '例：犬山城、犬山', '#proposal-prefecture': '都道府県を選択',
             '#proposal-name + input': '例：犬山城', '#prefecture-input': '都道府県を選択'
         }
         : {
-            '#answer-input': 'Enter a place name (e.g. Tokyo Station)', '#proposal-name': 'e.g. Inuyama Castle',
+            '#answer-input': state.gameType === 'world' ? 'Enter a place name (e.g. Eiffel Tower)' : 'Enter a place name (e.g. Tokyo Station)', '#proposal-name': 'e.g. Inuyama Castle',
             '#proposal-answer': 'e.g. Inuyama Castle, Inuyama', '#proposal-prefecture': 'Select a prefecture',
             '#prefecture-input': 'Select prefecture'
         };
@@ -695,6 +767,10 @@ function updateModeUI() {
     entryLabel.textContent = languageText(
         isWorld ? 'Select a country and enter the place.' : 'Select a prefecture and enter the place.',
         isWorld ? '国を選び、場所名を入力してください。' : '都道府県と場所を選んでください。'
+    );
+    el.answerInput.placeholder = languageText(
+        isWorld ? 'Enter a place name (e.g. Eiffel Tower)' : 'Enter a place name (e.g. Tokyo Station)',
+        isWorld ? '場所名を入力（例：エッフェル塔）' : '場所名を入力（例：東京駅）'
     );
     document.querySelector('.information-card:nth-child(1) p').textContent = languageText(
         isWorld ? 'Match both the country and place name to score.' : 'Match both the prefecture and place name to score.',
@@ -1014,7 +1090,7 @@ function renderResultItems(results) {
         item.innerHTML = `
             <span class="result-item-number">${index + 1}</span>
             <div class="result-item-location">
-                <strong>${escapeHtml(r.target.name)} (${escapeHtml(r.target.pref)})</strong>
+                    <strong>${escapeHtml(displayLocationName(r.target))} (${escapeHtml(displayCountryName(r.target.pref))})</strong>
                     <span>${r.skipped ? languageText('Skipped', 'スキップ') : r.answer ? (r.correct ? languageText('Correct', '正解') : languageText('Incorrect', '不正解')) : languageText('No answer', '未回答')}</span>
             </div>
                 <span class="result-item-score">${r.score} ${languageText('pt', '点')}</span>
@@ -1196,7 +1272,7 @@ function normalizeAnswer(value) {
 function isAnswerCorrect(answer, target) {
     if (!answer) return false;
 
-    return [target.name, `${target.pref}${target.name}`, ...(target.answers || [])]
+    return [target.name, displayLocationName(target), `${target.pref}${target.name}`, ...(target.answers || [])]
         .some((value) => normalizeAnswer(value) === answer);
 }
 
@@ -1230,7 +1306,7 @@ function toRad(deg) {
 function showAnswerResult(target, prefecture, answer, distanceKm, score, isCorrect, skipped) {
     el.answerScore.textContent = String(score);
     el.resultStatusLabel.textContent = skipped ? languageText('SKIPPED', 'スキップ') : isCorrect ? languageText('CORRECT', '正解') : languageText('INCORRECT', '不正解');
-    el.correctLocationName.textContent = `${target.name}（${target.pref}）`;
+    el.correctLocationName.textContent = `${displayLocationName(target)}（${displayCountryName(target.pref)}）`;
     el.answerDistance.textContent = skipped ? languageText('Skipped', 'スキップ') : answer ? (isCorrect ? languageText('Correct', '正解') : languageText('Incorrect', '不正解')) : languageText('No answer', '未回答');
     el.playerLocationName.textContent = skipped ? languageText('Skipped', 'スキップ') : prefecture && answer
         ? `${prefecture} ${answer}`
@@ -1282,7 +1358,7 @@ function renderResultMap(target, latlng) {
         }
     }, 50);
 
-    correctMarker.bindPopup(target.name);
+    correctMarker.bindPopup(displayLocationName(target));
 }
 
 function updateScoreDisplay() {
@@ -1419,8 +1495,8 @@ function shareResults() {
         ? languageText('Normal mode (7 questions)', '通常モード（7問）')
         : languageText(`Practice mode (${session.results.length} questions)`, `練習モード（${session.results.length}問）`);
     const text = languageText(
-        `Where's this? ${modeLabel}\nScore: ${session.totalScore} points / ${correctCount} correct\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? 'Correct' : 'Incorrect'}`).join('\n')}`,
-        `日本どこでしょう？ ${modeLabel}\nスコア：${session.totalScore}ポイント / ${correctCount}問正解\n${session.results.map((result, index) => `${index + 1}. ${result.target.name}: ${result.correct ? '正解' : '不正解'}`).join('\n')}`
+        `Where's this? ${modeLabel}\nScore: ${session.totalScore} points / ${correctCount} correct\n${session.results.map((result, index) => `${index + 1}. ${displayLocationName(result.target)}: ${result.correct ? 'Correct' : 'Incorrect'}`).join('\n')}`,
+        `日本どこでしょう？ ${modeLabel}\nスコア：${session.totalScore}ポイント / ${correctCount}問正解\n${session.results.map((result, index) => `${index + 1}. ${displayLocationName(result.target)}: ${result.correct ? '正解' : '不正解'}`).join('\n')}`
     );
 
     if (navigator.share) {
