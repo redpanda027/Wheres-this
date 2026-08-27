@@ -1,5 +1,5 @@
 /* ============================================================
-   日本どこでしょう？ - Main Stylesheet
+   Where's this? - Main Stylesheet
    ============================================================ */
 
 /* ============================================================
@@ -415,6 +415,21 @@ a {
     display: inline-flex;
     justify-content: center;
     color: var(--primary);
+}
+
+.menu-section-label {
+    margin: 12px 14px 0;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.menu-subitem {
+    padding-top: 9px;
+    padding-bottom: 9px;
+    padding-left: 28px;
 }
 
 .side-menu-footer {
@@ -1387,8 +1402,45 @@ kbd {
 
 .home-mode-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 13px;
+}
+
+.home-location-selector {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.home-location-label {
+    margin-right: 4px;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+}
+
+.location-choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 40px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    color: var(--text-soft);
+    font-weight: 800;
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.location-choice:hover,
+.location-choice.active {
+    border-color: rgba(79, 140, 255, 0.65);
+    background: rgba(79, 140, 255, 0.16);
+    color: var(--text);
 }
 
 #start-challenge-button,

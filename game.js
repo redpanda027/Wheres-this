@@ -229,8 +229,33 @@ const LOCATIONS = [
     ,{ name: '宮崎空港', answers: ['宮崎空港', '宮崎'], pref: '宮崎県', region: '九州・沖縄地方', lat: 31.877200, lng: 131.448600 }
 ];
 
+const WORLD_LOCATIONS = [
+    { name: 'Eiffel Tower', answers: ['Eiffel Tower', 'Eiffel'], pref: 'France', region: 'Europe', lat: 48.8584, lng: 2.2945 },
+    { name: 'Colosseum', answers: ['Colosseum', 'Coliseum'], pref: 'Italy', region: 'Europe', lat: 41.8902, lng: 12.4922 },
+    { name: 'Big Ben', answers: ['Big Ben', 'Elizabeth Tower'], pref: 'United Kingdom', region: 'Europe', lat: 51.5007, lng: -0.1246 },
+    { name: 'Sagrada Familia', answers: ['Sagrada Familia', 'Sagrada Família'], pref: 'Spain', region: 'Europe', lat: 41.4036, lng: 2.1744 },
+    { name: 'Acropolis of Athens', answers: ['Acropolis', 'Acropolis of Athens'], pref: 'Greece', region: 'Europe', lat: 37.9715, lng: 23.7257 },
+    { name: 'Statue of Liberty', answers: ['Statue of Liberty', 'Liberty Statue'], pref: 'United States', region: 'North America', lat: 40.6892, lng: -74.0445 },
+    { name: 'Golden Gate Bridge', answers: ['Golden Gate Bridge', 'Golden Gate'], pref: 'United States', region: 'North America', lat: 37.8199, lng: -122.4783 },
+    { name: 'Chichen Itza', answers: ['Chichen Itza', 'Chichén Itzá'], pref: 'Mexico', region: 'North America', lat: 20.6843, lng: -88.5678 },
+    { name: 'Christ the Redeemer', answers: ['Christ the Redeemer', 'Christ Redeemer'], pref: 'Brazil', region: 'South America', lat: -22.9519, lng: -43.2105 },
+    { name: 'Machu Picchu', answers: ['Machu Picchu'], pref: 'Peru', region: 'South America', lat: -13.1631, lng: -72.5450 },
+    { name: 'Taj Mahal', answers: ['Taj Mahal'], pref: 'India', region: 'Asia', lat: 27.1751, lng: 78.0421 },
+    { name: 'Angkor Wat', answers: ['Angkor Wat', 'Angkor'], pref: 'Cambodia', region: 'Asia', lat: 13.4125, lng: 103.8670 },
+    { name: 'Burj Khalifa', answers: ['Burj Khalifa', 'Burj'], pref: 'United Arab Emirates', region: 'Asia', lat: 25.1972, lng: 55.2744 },
+    { name: 'Great Wall of China', answers: ['Great Wall of China', 'Great Wall'], pref: 'China', region: 'Asia', lat: 40.4319, lng: 116.5704 },
+    { name: 'Petra', answers: ['Petra'], pref: 'Jordan', region: 'Asia', lat: 30.3285, lng: 35.4444 },
+    { name: 'Sydney Opera House', answers: ['Sydney Opera House', 'Opera House'], pref: 'Australia', region: 'Oceania', lat: -33.8568, lng: 151.2153 },
+    { name: 'Uluru', answers: ['Uluru', 'Ayers Rock'], pref: 'Australia', region: 'Oceania', lat: -25.3444, lng: 131.0369 },
+    { name: 'Pyramids of Giza', answers: ['Pyramids of Giza', 'Giza Pyramids', 'Pyramids'], pref: 'Egypt', region: 'Africa', lat: 29.9792, lng: 31.1342 },
+    { name: 'Table Mountain', answers: ['Table Mountain'], pref: 'South Africa', region: 'Africa', lat: -33.9628, lng: 18.4098 },
+    { name: 'Serengeti National Park', answers: ['Serengeti', 'Serengeti National Park'], pref: 'Tanzania', region: 'Africa', lat: -2.3333, lng: 34.8333 }
+];
+
 const JAPAN_CENTER = [36.5, 138.0];
 const JAPAN_DEFAULT_ZOOM = 5;
+const WORLD_CENTER = [20, 10];
+const WORLD_DEFAULT_ZOOM = 2;
 const EASY_LOCATION_NAMES = new Set([
     '東京駅', '大阪城', '清水寺', '札幌時計台', '博多駅', '首里城跡', '原爆ドーム',
     '名古屋城', '兼六園', '松本城', '鎌倉大仏', '東大寺', '熊本城', '弘前城', '錦帯橋',
@@ -258,6 +283,7 @@ const PREFECTURES = [
     '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県',
     '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'
 ];
+const COUNTRIES = [...new Set(WORLD_LOCATIONS.map((location) => location.pref))];
 
 
 /* ================================================================
@@ -298,6 +324,8 @@ const state = {
     },
 
     language: localStorage.getItem('jlg-language') || 'en',
+    gameType: 'japan',
+    homeGameMode: 'challenge',
 
     session: null,   // 進行中〜終了後のゲームセッション
     round: null,     // 現在のラウンド情報
@@ -344,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function cacheElements() {
     const ids = [
         'menu-button', 'logo', 'side-menu', 'close-menu-button', 'menu-overlay',
-        'menu-home', 'menu-results', 'menu-proposals', 'menu-settings', 'menu-help',
+        'menu-home', 'menu-practice',
         'question-number', 'question-total', 'score-value', 'timer-value', 'header-timer', 'language-select',
 
         'game-screen', 'game-info', 'hint-panel', 'result-screen', 'home-screen', 'proposals-screen', 'settings-screen', 'help-screen',
@@ -389,13 +417,29 @@ function cacheElements() {
 }
 
 function populatePrefectureOptions() {
-    [el.prefectureInput, el.proposalPrefecture].forEach((select) => {
+    [el.proposalPrefecture].forEach((select) => {
         PREFECTURES.forEach((prefecture) => {
             const option = document.createElement('option');
             option.value = prefecture;
             option.textContent = prefecture;
             select.appendChild(option);
         });
+    });
+    updateLocationOptions();
+}
+
+function updateLocationOptions() {
+    const options = state.gameType === 'world' ? COUNTRIES : PREFECTURES;
+    const label = state.gameType === 'world'
+        ? languageText('Select country', '国を選択')
+        : languageText('Select prefecture', '都道府県を選択');
+    el.prefectureInput.setAttribute('aria-label', label);
+    el.prefectureInput.innerHTML = `<option value="">${label}</option>`;
+    options.forEach((optionValue) => {
+        const option = document.createElement('option');
+        option.value = optionValue;
+        option.textContent = optionValue;
+        el.prefectureInput.appendChild(option);
     });
 }
 
@@ -405,8 +449,13 @@ function toCamelCase(id) {
 
 const UI_TRANSLATIONS = {
     en: {
-        '#menu-button': 'Open menu', '#close-menu-button': 'Close menu', '#menu-home': 'Game',
-        '#menu-results': 'Results', '#menu-proposals': 'Community questions', '#menu-settings': 'Settings',
+        '#menu-button': 'Open menu', '#close-menu-button': 'Close menu', '#menu-home': 'Home',
+        '#menu-practice': 'Practice mode',
+        '#menu-japan': 'Japan', '#menu-world': 'World', '#menu-results': 'Results', '#menu-proposals': 'Community questions', '#menu-settings': 'Settings',
+        '#menu-practice-japan': 'Japan', '#menu-practice-world': 'World', '.menu-section-label': 'Practice mode',
+        '#start-challenge-button .mode-card-title': 'JAPAN', '#start-practice-button .mode-card-title': 'WORLD',
+        '#start-challenge-button .mode-card-description': 'Guess locations across Japan.',
+        '#start-practice-button .mode-card-description': 'Guess countries and places around the world.',
         '#menu-help': 'How to play', '#game-title': 'Where in Japan is this?',
         '#game-screen': 'Game screen', '#game-progress': 'Game progress', '#header-score': 'Current score',
         '#header-timer': 'Time remaining', '.language-select-label .sr-only': 'Language', '#language-select': 'Language',
@@ -418,10 +467,6 @@ const UI_TRANSLATIONS = {
         '#map-status': 'Text entry', '#prefecture-input': 'Select prefecture',
         '#keyboard-help span:nth-child(1)': 'Enter answer', '#keyboard-help span:nth-child(2)': 'Submit', '#keyboard-help span:nth-child(3)': 'Hint',
         '.home-hero h1': 'Find the place in Japan.', '.home-hero p': 'Use satellite imagery as your clue and figure out where you are.',
-        '#start-challenge-button .mode-card-title': 'Normal mode',
-        '#start-challenge-button .mode-card-description': 'Answer 7 questions from the full collection.',
-        '#start-practice-button .mode-card-title': 'Practice mode',
-        '#start-practice-button .mode-card-description': 'Practice with your chosen number of questions, up to 30.',
         '#photo-panel h2': 'Find this place', '#map-panel h2': 'Enter your answer',
         '.answer-entry-label': 'Select a prefecture and enter the place.',
         '#answer-input-help': 'Enter the landmark or place name shown in the image.',
@@ -467,8 +512,13 @@ const UI_TRANSLATIONS = {
         '.scoring-row:nth-child(4) span': 'Prefecture only', '.scoring-row:nth-child(5) span': 'Aliases and short names', '.scoring-row:nth-child(6) span': 'Time out or no answer'
     },
     ja: {
-        '#menu-button': 'メニューを開く', '#close-menu-button': 'メニューを閉じる', '#menu-home': 'ゲーム',
-        '#menu-results': '結果', '#menu-proposals': 'みんなの問題', '#menu-settings': '設定', '#menu-help': '遊び方',
+        '#menu-button': 'メニューを開く', '#close-menu-button': 'メニューを閉じる', '#menu-home': 'ホーム',
+        '#menu-practice': '練習モード',
+        '#menu-japan': '日本', '#menu-world': '世界', '#menu-results': '結果', '#menu-proposals': 'みんなの問題', '#menu-settings': '設定', '#menu-help': '遊び方',
+        '#menu-practice-japan': '日本', '#menu-practice-world': 'ワールド', '.menu-section-label': '練習モード',
+        '#start-challenge-button .mode-card-title': '日本', '#start-practice-button .mode-card-title': 'ワールド',
+        '#start-challenge-button .mode-card-description': '日本各地の場所を当てよう。',
+        '#start-practice-button .mode-card-description': '世界の国と場所を当てよう。',
         '#game-title': 'この場所は日本のどこ？', '#game-screen': 'ゲーム画面', '#game-progress': 'ゲームの進捗', '#header-score': '現在のスコア',
         '#header-timer': '残り時間', '.language-select-label .sr-only': '言語', '#language-select': '言語', '#game-mode-label': '日本の場所',
         '#photo-panel h2': 'この場所を見つけよう', '#map-panel h2': '答えを入力', '#photo-panel .panel-kicker': '場所', '#map-panel .panel-kicker': '回答',
@@ -478,10 +528,6 @@ const UI_TRANSLATIONS = {
         '#photo-source-label': '衛星画像', '#photo-caption': '画像から場所を推理してください。', '#photo-meta-type': '航空写真',
         '#map-status': '文字入力', '#prefecture-input': '都道府県を選択',
         '.home-hero h1': '日本のどこかを\n見つけよう。', '.home-hero p': '航空写真を手がかりにして、日本のどこなのかを推理してください。',
-        '#start-challenge-button .mode-card-title': '通常モード',
-        '#start-challenge-button .mode-card-description': '7問に答える、いつものゲーム。',
-        '#start-practice-button .mode-card-title': '練習モード',
-        '#start-practice-button .mode-card-description': '設定した問題数で練習。最大30問まで遊べます。',
         '.answer-entry-label': '都道府県と場所を選んでください', '#answer-input-help': '写真から分かる施設名や場所名を入力してください。',
         '.answer-instruction strong': '答えを入力', '.answer-instruction p': '場所の名前を入力して回答してください。',
         '#submit-answer-button': '回答する', '#skip-answer-button': 'スキップ', '#hint-button': 'ヒント',
@@ -546,6 +592,8 @@ function setLanguage(language) {
                 if (textNode) textNode.textContent = `\n                                ${text}\n                                `;
             } else if (element.classList.contains('menu-item')) {
                 element.querySelector('span:last-child').textContent = text;
+            } else if (element.classList.contains('location-choice')) {
+                element.querySelector('span:last-child').textContent = text;
             } else if (element.id === 'submit-answer-button') {
                 element.querySelector('span').textContent = text;
             } else if (element.matches('button')) {
@@ -555,19 +603,19 @@ function setLanguage(language) {
             }
         });
     });
-    document.querySelector('.logo-main').textContent = languageText("Where's this?", '日本どこでしょう？');
+    document.querySelector('.logo-main').textContent = languageText("Where's this?", 'Where\'s this?');
     document.querySelector('.logo-sub').textContent = languageText('GUESS JAPAN', '日本を見つけよう');
     document.querySelectorAll('.header-stat-label').forEach((element, index) => {
         element.textContent = languageText(index === 0 ? 'SCORE' : 'TIME', index === 0 ? 'スコア' : '時間');
     });
     const commonText = state.language === 'ja'
         ? {
-            '.side-menu-header h2': 'メニュー', '.side-menu-footer p:first-child': '日本どこでしょう？',
+            '.side-menu-header h2': 'メニュー', '.side-menu-footer p:first-child': 'Where\'s this?',
             '.side-menu-footer .version': 'バージョン 1.0', '.result-list-header h2': '各問題の結果',
             '#game-screen .hint-content p': '写真に写っている地形、道路、建物、植生などをよく観察してください。'
         }
         : {
-            '.side-menu-header h2': 'Menu', '.side-menu-footer p:first-child': 'Japan Location Game',
+            '.side-menu-header h2': 'Menu', '.side-menu-footer p:first-child': 'Guess the Location Game',
             '.side-menu-footer .version': 'Version 1.0', '.result-list-header h2': 'Question breakdown',
             '#game-screen .hint-content p': 'Look closely at the terrain, roads, buildings, and vegetation.'
         };
@@ -592,6 +640,8 @@ function setLanguage(language) {
         });
     });
     updateSettingOptions();
+    updateLocationOptions();
+    updateModeUI();
     if (state.round) updateHintText(state.round.target);
     renderProposals();
 }
@@ -605,6 +655,59 @@ function updateSettingOptions() {
 
 function languageText(english, japanese) {
     return state.language === 'ja' ? japanese : english;
+}
+
+function updateModeUI() {
+    const isWorld = state.gameType === 'world';
+    const modeText = isWorld
+        ? ['WORLD LOCATION', '世界の場所']
+        : ['JAPAN LOCATION', '日本の場所'];
+    const titleText = isWorld
+        ? ['Where in the world is this?', 'この場所は世界のどこ？']
+        : ['Where in Japan is this?', 'この場所は日本のどこ？'];
+    const heroText = isWorld
+        ? ['Find the place\nin the world.', '世界のどこかを\n見つけよう。']
+        : ['Find the place\nin Japan.', '日本のどこかを\n見つけよう。'];
+    el.gameModeLabel.textContent = languageText(...modeText);
+    el.gameTitle.textContent = languageText(...titleText);
+    document.querySelector('.home-hero .hero-kicker').textContent = languageText(
+        isWorld ? 'WORLD LOCATION GAME' : 'JAPAN LOCATION GAME',
+        isWorld ? '世界の場所ゲーム' : '日本の場所ゲーム'
+    );
+    document.querySelector('.home-hero h1').textContent = languageText(...heroText);
+    document.querySelector('.home-hero p').textContent = languageText(
+        isWorld ? 'Use satellite imagery as your clue and figure out which country and place you are seeing.' : 'Use satellite imagery as your clue and figure out where you are.',
+        isWorld ? '航空写真を手がかりに、どの国のどの場所なのかを推理してください。' : '航空写真を手がかりに、日本のどこなのかを推理してください。'
+    );
+    document.querySelector('.side-menu-footer p:first-child').textContent = languageText(
+        isWorld ? 'World Location Game' : 'Japan Location Game',
+        isWorld ? '世界の場所ゲーム' : '日本どこでしょう？'
+    );
+    document.querySelector('#site-footer .footer-left span:last-child').textContent = languageText(
+        isWorld ? 'World Location Game' : 'Japan Location Game',
+        isWorld ? '世界の場所ゲーム' : '日本どこでしょう？'
+    );
+    const entryLabel = document.querySelector('.answer-entry-label');
+    entryLabel.textContent = languageText(
+        isWorld ? 'Select a country and enter the place.' : 'Select a prefecture and enter the place.',
+        isWorld ? '国を選び、場所名を入力してください。' : '都道府県と場所を選んでください。'
+    );
+    document.querySelector('.information-card:nth-child(1) p').textContent = languageText(
+        isWorld ? 'Match both the country and place name to score.' : 'Match both the prefecture and place name to score.',
+        isWorld ? '国と場所名の両方が合うと得点になります。' : '都道府県と場所名の両方が合うと得点になります。'
+    );
+}
+
+function setGameType(gameType) {
+    state.gameType = gameType === 'world' ? 'world' : 'japan';
+    updateLocationOptions();
+    updateModeUI();
+    showScreen('home');
+}
+
+function startPracticeGame(gameType) {
+    state.homeGameMode = 'practice';
+    setGameType(gameType);
 }
 
 
@@ -798,6 +901,7 @@ function startGame(mode) {
     el.gameModeLabel.textContent = mode === 'challenge'
         ? languageText('NORMAL MODE', '通常モード')
         : languageText('PRACTICE MODE', '練習モード');
+    updateModeUI();
 
     updateScoreDisplay();
     showScreen('game');
@@ -824,8 +928,8 @@ function startProposal(proposal) {
 }
 
 function buildRoundPool(count) {
-    const availableLocations = LOCATIONS
-        .filter((location) => !UNSUITABLE_LOCATION_NAMES.has(location.name));
+    const availableLocations = (state.gameType === 'world' ? WORLD_LOCATIONS : LOCATIONS)
+        .filter((location) => state.gameType === 'world' || !UNSUITABLE_LOCATION_NAMES.has(location.name));
     const shuffled = shuffleArray(availableLocations.slice());
     const pool = [];
     for (let i = 0; i < count; i++) {
@@ -1001,7 +1105,7 @@ function initAnswerMap() {
         zoomControl: false,
         minZoom: 5,
         maxZoom: 14
-    }).setView(JAPAN_CENTER, JAPAN_DEFAULT_ZOOM);
+    }).setView(state.gameType === 'world' ? WORLD_CENTER : JAPAN_CENTER, state.gameType === 'world' ? WORLD_DEFAULT_ZOOM : JAPAN_DEFAULT_ZOOM);
 
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
@@ -1376,23 +1480,25 @@ function bindEvents() {
     el.menuOverlay.addEventListener('click', closeSideMenu);
     el.logo.addEventListener('click', (e) => { e.preventDefault(); goHome(); });
 
-    el.menuHome.addEventListener('click', goHome);
-    el.menuResults.addEventListener('click', () => {
-        if (state.session && state.session.results.length) {
-            showScreen('result');
-        } else {
-            showNotification(languageText('There are no results yet.', 'まだ結果がありません。'), 'error');
-            closeSideMenu();
-        }
+    el.menuHome.addEventListener('click', () => {
+        state.homeGameMode = 'challenge';
+        goHome();
     });
-    el.menuProposals.addEventListener('click', () => showScreen('proposals'));
-    el.menuHelp.addEventListener('click', () => showScreen('help'));
-
+    el.menuPractice.addEventListener('click', () => {
+        state.homeGameMode = 'practice';
+        showScreen('home');
+    });
     el.footerHelpButton.addEventListener('click', () => showScreen('help'));
 
     /* ホーム画面 */
-    el.startChallengeButton.addEventListener('click', () => startGame('challenge'));
-    el.startPracticeButton.addEventListener('click', () => startGame('practice'));
+    el.startChallengeButton.addEventListener('click', () => {
+        setGameType('japan');
+        startGame(state.homeGameMode);
+    });
+    el.startPracticeButton.addEventListener('click', () => {
+        setGameType('world');
+        startGame(state.homeGameMode);
+    });
     el.proposalForm.addEventListener('submit', addProposal);
 
     /* ゲーム画面 */
