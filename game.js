@@ -193,6 +193,31 @@ const LOCATIONS = [
     ,{ name: '盛岡駅', answers: ['盛岡駅', '盛岡'], pref: '岩手県', region: '東北地方', lat: 39.701500, lng: 141.136600 }
     ,{ name: '新青森駅', answers: ['新青森駅', '新青森', '青森'], pref: '青森県', region: '東北地方', lat: 40.829500, lng: 140.693900 }
     ,{ name: '札幌駅', answers: ['札幌駅', '札幌'], pref: '北海道', region: '北海道地方', lat: 43.068700, lng: 141.350800 }
+    ,{ name: '函館駅', answers: ['函館駅', '函館'], pref: '北海道', region: '北海道地方', lat: 41.773700, lng: 140.726400 }
+    ,{ name: '旭川駅', answers: ['旭川駅', '旭川'], pref: '北海道', region: '北海道地方', lat: 43.763400, lng: 142.357600 }
+    ,{ name: '秋田駅', answers: ['秋田駅', '秋田'], pref: '秋田県', region: '東北地方', lat: 39.716000, lng: 140.129700 }
+    ,{ name: '福島駅', answers: ['福島駅', '福島'], pref: '福島県', region: '東北地方', lat: 37.754700, lng: 140.459700 }
+    ,{ name: '宇都宮駅', answers: ['宇都宮駅', '宇都宮'], pref: '栃木県', region: '関東地方', lat: 36.559300, lng: 139.898400 }
+    ,{ name: '高崎駅', answers: ['高崎駅', '高崎'], pref: '群馬県', region: '関東地方', lat: 36.322100, lng: 139.012300 }
+    ,{ name: '渋谷駅', answers: ['渋谷駅', '渋谷'], pref: '東京都', region: '関東地方', lat: 35.658000, lng: 139.701600 }
+    ,{ name: '池袋駅', answers: ['池袋駅', '池袋'], pref: '東京都', region: '関東地方', lat: 35.729500, lng: 139.710900 }
+    ,{ name: '秋葉原駅', answers: ['秋葉原駅', '秋葉原'], pref: '東京都', region: '関東地方', lat: 35.698700, lng: 139.773100 }
+    ,{ name: '舞浜駅', answers: ['舞浜駅', '舞浜', 'ディズニーリゾート'], pref: '千葉県', region: '関東地方', lat: 35.636200, lng: 139.884700 }
+    ,{ name: '新横浜駅', answers: ['新横浜駅', '新横浜'], pref: '神奈川県', region: '関東地方', lat: 35.507400, lng: 139.617300 }
+    ,{ name: '小田原駅', answers: ['小田原駅', '小田原'], pref: '神奈川県', region: '関東地方', lat: 35.256300, lng: 139.155000 }
+    ,{ name: '長野駅', answers: ['長野駅', '長野'], pref: '長野県', region: '中部地方', lat: 36.643100, lng: 138.188900 }
+    ,{ name: '富山駅', answers: ['富山駅', '富山'], pref: '富山県', region: '中部地方', lat: 36.701300, lng: 137.213700 }
+    ,{ name: '福井駅', answers: ['福井駅', '福井'], pref: '福井県', region: '中部地方', lat: 36.061800, lng: 136.223700 }
+    ,{ name: '岐阜駅', answers: ['岐阜駅', '岐阜'], pref: '岐阜県', region: '中部地方', lat: 35.409200, lng: 136.756600 }
+    ,{ name: '大阪駅', answers: ['大阪駅', '大阪', '梅田'], pref: '大阪府', region: '近畿地方', lat: 34.702500, lng: 135.495900 }
+    ,{ name: '奈良駅', answers: ['奈良駅', '奈良'], pref: '奈良県', region: '近畿地方', lat: 34.680100, lng: 135.818800 }
+    ,{ name: '姫路駅', answers: ['姫路駅', '姫路'], pref: '兵庫県', region: '近畿地方', lat: 34.826700, lng: 134.690800 }
+    ,{ name: '新神戸駅', answers: ['新神戸駅', '新神戸'], pref: '兵庫県', region: '近畿地方', lat: 34.706900, lng: 135.197900 }
+    ,{ name: '徳島駅', answers: ['徳島駅', '徳島'], pref: '徳島県', region: '四国地方', lat: 34.074400, lng: 134.551300 }
+    ,{ name: '高知駅', answers: ['高知駅', '高知'], pref: '高知県', region: '四国地方', lat: 33.566500, lng: 133.543400 }
+    ,{ name: '小倉駅', answers: ['小倉駅', '小倉'], pref: '福岡県', region: '九州・沖縄地方', lat: 33.886900, lng: 130.882700 }
+    ,{ name: '長崎駅', answers: ['長崎駅', '長崎'], pref: '長崎県', region: '九州・沖縄地方', lat: 32.752800, lng: 129.869200 }
+    ,{ name: '宮崎駅', answers: ['宮崎駅', '宮崎'], pref: '宮崎県', region: '九州・沖縄地方', lat: 31.915000, lng: 131.432000 }
     ,{ name: '西船橋ジャンクション', answers: ['西船橋ジャンクション', '西船橋JCT', '西船橋'], pref: '千葉県', region: '関東地方', lat: 35.707000, lng: 139.958000 }
     ,{ name: '高谷ジャンクション', answers: ['高谷ジャンクション', '高谷JCT', '高谷'], pref: '千葉県', region: '関東地方', lat: 35.689000, lng: 139.936000 }
     ,{ name: '木更津ジャンクション', answers: ['木更津ジャンクション', '木更津JCT', '木更津'], pref: '千葉県', region: '関東地方', lat: 35.392000, lng: 139.973000 }
@@ -277,7 +302,36 @@ const WORLD_LOCATIONS = [
     { name: 'Avenue of Baobabs', answers: ['Avenue of Baobabs', 'Baobab Avenue'], pref: 'Madagascar', region: 'Africa', lat: -20.2500, lng: 44.4183 },
     { name: 'Milford Sound', answers: ['Milford Sound'], pref: 'New Zealand', region: 'Oceania', lat: -44.6719, lng: 167.9250 },
     { name: 'Great Barrier Reef', answers: ['Great Barrier Reef', 'Barrier Reef'], pref: 'Australia', region: 'Oceania', lat: -18.2871, lng: 147.6992 },
-    { name: 'Bora Bora', answers: ['Bora Bora'], pref: 'French Polynesia', region: 'Oceania', lat: -16.5004, lng: -151.7415 }
+    { name: 'Bora Bora', answers: ['Bora Bora'], pref: 'French Polynesia', region: 'Oceania', lat: -16.5004, lng: -151.7415 },
+    { name: 'Notre-Dame de Paris', answers: ['Notre-Dame', 'Notre-Dame de Paris'], pref: 'France', region: 'Europe', lat: 48.8530, lng: 2.3499 },
+    { name: 'Arc de Triomphe', answers: ['Arc de Triomphe'], pref: 'France', region: 'Europe', lat: 48.8738, lng: 2.2950 },
+    { name: 'Buckingham Palace', answers: ['Buckingham Palace', 'Buckingham'], pref: 'United Kingdom', region: 'Europe', lat: 51.5014, lng: -0.1419 },
+    { name: 'Vatican City', answers: ['Vatican City', 'Vatican'], pref: 'Vatican City', region: 'Europe', lat: 41.9022, lng: 12.4539 },
+    { name: 'Trevi Fountain', answers: ['Trevi Fountain', 'Trevi'], pref: 'Italy', region: 'Europe', lat: 41.9009, lng: 12.4833 },
+    { name: 'Santorini', answers: ['Santorini'], pref: 'Greece', region: 'Europe', lat: 36.3932, lng: 25.4615 },
+    { name: 'Amsterdam Canals', answers: ['Amsterdam Canals', 'Amsterdam'], pref: 'Netherlands', region: 'Europe', lat: 52.3731, lng: 4.8922 },
+    { name: 'Prague Castle', answers: ['Prague Castle', 'Prague'], pref: 'Czech Republic', region: 'Europe', lat: 50.0909, lng: 14.4005 },
+    { name: 'Times Square', answers: ['Times Square'], pref: 'United States', region: 'North America', lat: 40.7580, lng: -73.9855 },
+    { name: 'Empire State Building', answers: ['Empire State Building', 'Empire State'], pref: 'United States', region: 'North America', lat: 40.7484, lng: -73.9857 },
+    { name: 'Hollywood Sign', answers: ['Hollywood Sign', 'Hollywood'], pref: 'United States', region: 'North America', lat: 34.1341, lng: -118.3215 },
+    { name: 'Grand Canyon', answers: ['Grand Canyon'], pref: 'United States', region: 'North America', lat: 36.1069, lng: -112.1129 },
+    { name: 'CN Tower', answers: ['CN Tower'], pref: 'Canada', region: 'North America', lat: 43.6426, lng: -79.3871 },
+    { name: 'Panama Canal', answers: ['Panama Canal'], pref: 'Panama', region: 'North America', lat: 9.0800, lng: -79.6800 },
+    { name: 'Horseshoe Bend', answers: ['Horseshoe Bend'], pref: 'United States', region: 'North America', lat: 36.8790, lng: -111.5100 },
+    { name: 'Sugarloaf Mountain', answers: ['Sugarloaf Mountain', 'Sugarloaf'], pref: 'Brazil', region: 'South America', lat: -22.9486, lng: -43.1566 },
+    { name: 'Salar de Uyuni', answers: ['Salar de Uyuni', 'Uyuni Salt Flats'], pref: 'Bolivia', region: 'South America', lat: -20.1338, lng: -67.4891 },
+    { name: 'Galapagos Islands', answers: ['Galapagos Islands', 'Galapagos'], pref: 'Ecuador', region: 'South America', lat: -0.9538, lng: -90.9656 },
+    { name: 'Torres del Paine', answers: ['Torres del Paine'], pref: 'Chile', region: 'South America', lat: -50.9423, lng: -73.4068 },
+    { name: 'Seoul Tower', answers: ['Seoul Tower', 'N Seoul Tower'], pref: 'South Korea', region: 'Asia', lat: 37.5512, lng: 126.9882 },
+    { name: 'Petronas Towers', answers: ['Petronas Towers', 'Petronas Twin Towers'], pref: 'Malaysia', region: 'Asia', lat: 3.1579, lng: 101.7116 },
+    { name: 'Grand Palace Bangkok', answers: ['Grand Palace', 'Grand Palace Bangkok'], pref: 'Thailand', region: 'Asia', lat: 13.7500, lng: 100.4914 },
+    { name: 'Ha Long Bay', answers: ['Ha Long Bay', 'Halong Bay'], pref: 'Vietnam', region: 'Asia', lat: 20.9101, lng: 107.1839 },
+    { name: 'Kremlin', answers: ['Kremlin', 'Moscow Kremlin'], pref: 'Russia', region: 'Europe', lat: 55.7520, lng: 37.6175 },
+    { name: 'Mount Kilimanjaro', answers: ['Mount Kilimanjaro', 'Kilimanjaro'], pref: 'Tanzania', region: 'Africa', lat: -3.0674, lng: 37.3556 },
+    { name: 'Sahara Desert', answers: ['Sahara Desert', 'Sahara'], pref: 'Egypt', region: 'Africa', lat: 25.0000, lng: 13.0000 },
+    { name: 'Cape of Good Hope', answers: ['Cape of Good Hope', 'Cape Point'], pref: 'South Africa', region: 'Africa', lat: -34.3568, lng: 18.4739 },
+    { name: 'Lagos de Plitvice', answers: ['Plitvice Lakes', 'Plitvice'], pref: 'Croatia', region: 'Europe', lat: 44.8654, lng: 15.5820 },
+    { name: 'Auckland Sky Tower', answers: ['Auckland Sky Tower', 'Sky Tower'], pref: 'New Zealand', region: 'Oceania', lat: -36.8485, lng: 174.7622 }
 ];
 
 const JAPAN_CENTER = [36.5, 138.0];
@@ -341,7 +395,9 @@ const WORLD_JAPANESE_COUNTRIES = {
     Japan: '日本', Turkey: 'トルコ', Germany: 'ドイツ', Russia: 'ロシア', Canada: 'カナダ', Cuba: 'キューバ',
     Chile: 'チリ', Argentina: 'アルゼンチン', Indonesia: 'インドネシア', Singapore: 'シンガポール', Nepal: 'ネパール',
     Ethiopia: 'エチオピア', Zimbabwe: 'ジンバブエ', Morocco: 'モロッコ', Madagascar: 'マダガスカル',
-    'New Zealand': 'ニュージーランド', 'French Polynesia': 'フランス領ポリネシア'
+    'New Zealand': 'ニュージーランド', 'French Polynesia': 'フランス領ポリネシア', 'Vatican City': 'バチカン市国',
+    Netherlands: 'オランダ', 'Czech Republic': 'チェコ', Panama: 'パナマ', Bolivia: 'ボリビア', Ecuador: 'エクアドル',
+    'South Korea': '韓国', Malaysia: 'マレーシア', Thailand: 'タイ', Vietnam: 'ベトナム', Croatia: 'クロアチア'
 };
 const WORLD_JAPANESE_NAMES = {
     'Eiffel Tower': 'エッフェル塔', Colosseum: 'コロッセオ', 'Big Ben': 'ビッグ・ベン', 'Sagrada Familia': 'サグラダ・ファミリア',
@@ -360,7 +416,16 @@ const WORLD_JAPANESE_NAMES = {
     'Terracotta Army': '兵馬俑', 'Kinkaku-ji': '金閣寺', 'Lalibela Churches': 'ラリベラの岩窟教会群',
     'Victoria Falls': 'ビクトリアの滝', 'Sphinx of Giza': 'ギザの大スフィンクス', 'Marrakesh Medina': 'マラケシュ旧市街',
     'Avenue of Baobabs': 'バオバブ街道', 'Milford Sound': 'ミルフォード・サウンド',
-    'Great Barrier Reef': 'グレート・バリア・リーフ', 'Bora Bora': 'ボラボラ島'
+    'Great Barrier Reef': 'グレート・バリア・リーフ', 'Bora Bora': 'ボラボラ島', 'Notre-Dame de Paris': 'ノートルダム大聖堂',
+    'Arc de Triomphe': '凱旋門', 'Buckingham Palace': 'バッキンガム宮殿', 'Vatican City': 'バチカン市国',
+    'Trevi Fountain': 'トレビの泉', Santorini: 'サントリーニ島', 'Amsterdam Canals': 'アムステルダム運河',
+    'Prague Castle': 'プラハ城', 'Times Square': 'タイムズスクエア', 'Empire State Building': 'エンパイア・ステート・ビルディング',
+    'Hollywood Sign': 'ハリウッドサイン', 'Grand Canyon': 'グランドキャニオン', 'CN Tower': 'CNタワー',
+    'Panama Canal': 'パナマ運河', 'Horseshoe Bend': 'ホースシューベンド', 'Sugarloaf Mountain': 'シュガーローフ山',
+    'Salar de Uyuni': 'ウユニ塩湖', 'Galapagos Islands': 'ガラパゴス諸島', 'Torres del Paine': 'トーレス・デル・パイネ',
+    'Seoul Tower': 'ソウルタワー', 'Petronas Towers': 'ペトロナスツインタワー', 'Grand Palace Bangkok': 'バンコク王宮',
+    'Ha Long Bay': 'ハロン湾', Kremlin: 'クレムリン', 'Mount Kilimanjaro': 'キリマンジャロ', 'Sahara Desert': 'サハラ砂漠',
+    'Cape of Good Hope': '喜望峰', 'Lagos de Plitvice': 'プリトヴィツェ湖群', 'Auckland Sky Tower': 'スカイタワー'
 };
 
 function displayLocationName(location) {
@@ -1237,13 +1302,15 @@ function ensurePhotoMap() {
     el.photoContainer.insertBefore(mapDiv, el.photoContainer.firstChild);
 
     state.photoMap = L.map(mapDiv, {
-        zoomControl: true,
+        zoomControl: false,
         dragging: false,
-        scrollWheelZoom: true,
-        doubleClickZoom: true,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
         boxZoom: false,
         keyboard: false,
-        touchZoom: true,
+        touchZoom: false,
+        minZoom: 15,
+        maxZoom: 15,
         attributionControl: true
     });
 
@@ -1567,6 +1634,13 @@ function closeModal(modal) {
     }
 }
 
+function closeAnswerResultModal() {
+    closeModal(el.answerResultModal);
+    if (state.session && !state.session.finished) {
+        showScreen('game');
+    }
+}
+
 function closeAnyOpenModal() {
     if (state.activeModal) {
         closeModal(state.activeModal);
@@ -1717,7 +1791,7 @@ function bindEvents() {
     el.hintButton.addEventListener('click', () => openModal(el.hintModal));
 
     /* 回答結果モーダル */
-    el.closeResultModalButton.addEventListener('click', () => closeModal(el.answerResultModal));
+    el.closeResultModalButton.addEventListener('click', closeAnswerResultModal);
     el.nextQuestionButton.addEventListener('click', () => {
         closeModal(el.answerResultModal);
         nextRound();
@@ -1751,7 +1825,13 @@ function bindEvents() {
     /* モーダル背景クリックで閉じる（終了確認以外） */
     [el.answerResultModal, el.hintModal].forEach((modal) => {
         const backdrop = modal.querySelector('.modal-backdrop');
-        if (backdrop) backdrop.addEventListener('click', () => closeModal(modal));
+        if (backdrop) backdrop.addEventListener('click', () => {
+            if (modal === el.answerResultModal) {
+                closeAnswerResultModal();
+            } else {
+                closeModal(modal);
+            }
+        });
     });
 
     /* キーボード操作 */
